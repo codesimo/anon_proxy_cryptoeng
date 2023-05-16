@@ -7,7 +7,6 @@
 #include <nettle/ctr.h>
 #include <nettle/sha3.h>
 
-
 #define elgamal_mr_iterations 12
 
 #define elgamal_mod_hash_size 32
@@ -20,13 +19,11 @@
 #define elgamal_mod_ske_block_size 16
 #define elgamal_mod_ske_ctx aes256_ctx
 #define elgamal_mod_ske_set_encypt_key aes256_set_encrypt_key
-#define elgamal_mod_ske_set_decrypt_key aes256_set_decrypt_key
+#define elgamal_mod_ske_set_decrypt_key aes256_set_encrypt_key // same as encrypt because of CTR
 #define elgamal_mod_ske_encrypt aes256_encrypt
 #define elgamal_mod_ske_block_encrypt ctr_crypt
-#define elgamal_mod_ske_decrypt aes256_decrypt
+#define elgamal_mod_ske_decrypt aes256_encrypt // same as encrypt because of CTR
 #define elgamal_mod_ske_block_decrypt ctr_crypt
-
-
 
 struct elgamal_plaintext_struct
 {
@@ -73,7 +70,7 @@ void elgamal_mod_h1(elgamal_mod_params_t params,
                     uint8_t *input, size_t input_size, mpz_t output);
 
 void elgamal_mod_h2(elgamal_mod_params_t params,
-                    uint8_t *input, size_t input_size, uint8_t* output);
+                    uint8_t *input, size_t input_size, uint8_t *output);
 
 void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng,
                          elgamal_plaintext_t plaintext, elgamal_ciphertext_t ciphertext);

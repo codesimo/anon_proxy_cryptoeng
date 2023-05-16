@@ -41,7 +41,7 @@ void plain_pmesg(msg_level_t level, const char *format, ...) {
     if (level > msg_level_threshold)
         return;
 
-    for (char i = msg_silence; i < level; i++)
+    for (unsigned char i = msg_silence; i < level; i++)
         fputc(' ', pmesg_io_channel);
 
     va_start(args, format);
@@ -62,7 +62,7 @@ void gmp_pmesg(msg_level_t level, const char *format, ...) {
     if (level > msg_level_threshold)
         return;
 
-    for (char i = msg_silence; i < level; i++)
+    for (unsigned char i = msg_silence; i < level; i++)
         fputc(' ', pmesg_io_channel);
 
     va_start(args, format);
@@ -81,7 +81,7 @@ void __pmesg_mpz(msg_level_t level, const char *name, const char *var_name,
     if (level > msg_level_threshold)
         return;
 
-    for (char i = msg_silence; i < level; i++)
+    for (unsigned char i = msg_silence; i < level; i++)
         fputc(' ', pmesg_io_channel);
 
     int number_base_len = mpz_sizeinbase(number, base);
@@ -112,7 +112,7 @@ void __pmesg_mpf(msg_level_t level, const char *name, const char *var_name,
     if (level > msg_level_threshold)
         return;
 
-    for (char i = msg_silence; i < level; i++)
+    for (unsigned char i = msg_silence; i < level; i++)
         fputc(' ', pmesg_io_channel);
 
     if (strlen(name) > 0)
@@ -126,7 +126,7 @@ void __pmesg_hex(msg_level_t level, const char *name, const char *var_name,
     if (level > msg_level_threshold)
         return;
 
-    for (char i = msg_silence; i < level; i++)
+    for (unsigned char i = msg_silence; i < level; i++)
         fputc(' ', pmesg_io_channel);
 
     if (strlen(name) > 0)
@@ -144,7 +144,7 @@ void __pmesg_stats(msg_level_t level, const char *name, const char *var_name,
     if (level > msg_level_threshold)
         return;
 
-    for (char i = msg_silence; i < level; i++)
+    for (unsigned char i = msg_silence; i < level; i++)
         fputc(' ', pmesg_io_channel);
 
     if (strlen(name) > 0)
