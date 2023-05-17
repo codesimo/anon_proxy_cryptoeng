@@ -7,7 +7,7 @@
 
 int main()
 {
-    set_messaging_level(msg_very_verbose);
+    set_messaging_level(msg_verbose);
     srand(time(NULL));
 
     gmp_randstate_t prng;
@@ -17,25 +17,21 @@ int main()
     elgamal_mod_params_t params;
     elgamal_mod_init(params, 80, prng);
 
-    printf("\n\nInitialize plaintext...\n\n");
-
     elgamal_plaintext_t plaintext;
-    plaintext->m_size = 16;
+    plaintext->m_size = 32;
     plaintext->m = (uint8_t *)malloc(plaintext->m_size * sizeof(uint8_t));
     for (size_t i = 0; i < plaintext->m_size; i++)
         plaintext->m[i] = rand() % 256;
+    
 
-    printf("Plaintext: ");
-    for (size_t i = 0; i < plaintext->m_size; i++)
-        printf("%02x", plaintext->m[i]);
-    printf("\n");
-    printf("Plaintext size: %lu\n", plaintext->m_size);
+    pmesg(msg_verbose,"\n--------PLAINTEXT--------\n");
+    pmesg_hex(msg_verbose, "plaintext", plaintext->m_size, plaintext->m);
 
     elgamal_ciphertext_t ciphertext;
-    printf("\n--------ENCRYPT--------\n");
+    pmesg(msg_verbose,"\n--------ENCRYPT--------\n");
     elgamal_mod_encrypt(params, prng, plaintext, ciphertext);
 
     elgamal_plaintext_t plaintext2;
-    printf("\n--------DECRYPT--------\n");
+    pmesg(msg_verbose,"\n--------DECRYPT--------\n");
     elgamal_mod_decrypt(params, ciphertext, plaintext2);
 }

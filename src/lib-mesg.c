@@ -31,7 +31,8 @@ msg_level_t get_messaging_level() { return msg_level_threshold; }
 /* Nulla da fare. pmesg e gmp_pmesg sono stati già "definiti nulli" in
  * lib-mesg.h. */
 #else
-void plain_pmesg(msg_level_t level, const char *format, ...) {
+void plain_pmesg(msg_level_t level, const char *format, ...)
+{
 #if defined(NDEBUG)
 /* corpo vuoto: il compilatore dovrebbe ottimizzare il codice rimuovendo
  * le chiamate */
@@ -52,7 +53,8 @@ void plain_pmesg(msg_level_t level, const char *format, ...) {
 #endif /* defined(NDEBUG) */
 }
 
-void gmp_pmesg(msg_level_t level, const char *format, ...) {
+void gmp_pmesg(msg_level_t level, const char *format, ...)
+{
 #if defined(NDEBUG)
 /* corpo vuoto: il compilatore dovrebbe ottimizzare il codice rimuovendo
  * le chiamate */
@@ -77,7 +79,8 @@ void gmp_pmesg(msg_level_t level, const char *format, ...) {
 
 #if !defined(NDEBUG)
 void __pmesg_mpz(msg_level_t level, const char *name, const char *var_name,
-                 const mpz_t number, int base) {
+                 const mpz_t number, int base)
+{
     if (level > msg_level_threshold)
         return;
 
@@ -91,9 +94,12 @@ void __pmesg_mpz(msg_level_t level, const char *name, const char *var_name,
     else
         fprintf(pmesg_io_channel, "'%s' (%zu bit): ", var_name,
                 mpz_sizeinbase(number, 2));
-    if (number_base_len <= pmesg_mpz_shortening_threshold) {
+    if (number_base_len <= pmesg_mpz_shortening_threshold)
+    {
         mpz_out_str(pmesg_io_channel, base, number);
-    } else {
+    }
+    else
+    {
         char buffer[number_base_len + 2];
         mpz_get_str(buffer, base, number);
         assert((pmesg_mpz_shortening_prefix_suffix_length * 2) <
@@ -108,7 +114,8 @@ void __pmesg_mpz(msg_level_t level, const char *name, const char *var_name,
 }
 
 void __pmesg_mpf(msg_level_t level, const char *name, const char *var_name,
-                 const mpf_t number) {
+                 const mpf_t number)
+{
     if (level > msg_level_threshold)
         return;
 
@@ -122,7 +129,8 @@ void __pmesg_mpf(msg_level_t level, const char *name, const char *var_name,
 }
 
 void __pmesg_hex(msg_level_t level, const char *name, const char *var_name,
-                 size_t data_size, const void *data) {
+                 size_t data_size, const void *data)
+{
     if (level > msg_level_threshold)
         return;
 
@@ -135,12 +143,13 @@ void __pmesg_hex(msg_level_t level, const char *name, const char *var_name,
         fprintf(pmesg_io_channel, "'%s': ", var_name);
 
     for (size_t i = 0; i < data_size; i++)
-        fprintf(pmesg_io_channel, "%02X ", ((uint8_t *)data)[i]);
+        fprintf(pmesg_io_channel, "%02X", ((uint8_t *)data)[i]);
     fprintf(pmesg_io_channel, "\n");
 }
 
 void __pmesg_stats(msg_level_t level, const char *name, const char *var_name,
-                   const stats_t stats) {
+                   const stats_t stats)
+{
     if (level > msg_level_threshold)
         return;
 
@@ -157,7 +166,8 @@ void __pmesg_stats(msg_level_t level, const char *name, const char *var_name,
 
 #if defined(PBC_SUPPORT)
 void __pmesg_element(msg_level_t level, const char *name, const char *var_name,
-                     const element_t element) {
+                     const element_t element)
+{
     if (level > msg_level_threshold)
         return;
 

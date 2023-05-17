@@ -31,7 +31,8 @@
 #include <pbc/pbc.h>
 #endif
 
-typedef enum {
+typedef enum
+{
     msg_silence,
     msg_normal,
     msg_verbose,
@@ -69,25 +70,25 @@ void gmp_pmesg(msg_level_t level, const char *format, ...);
 #define pmesg_stats(level, name, stats) ((void)0)
 #define pmesg_element(level, name, element) ((void)0)
 #else
-#define pmesg_mpz(level, name, number)                                         \
+#define pmesg_mpz(level, name, number) \
     (__pmesg_mpz(level, name, #number, number, pmesg_mpz_default_base))
-#define pmesg_mpz_in_base(level, name, number, base)                           \
+#define pmesg_mpz_in_base(level, name, number, base) \
     (__pmesg_mpz(level, name, #number, number, base))
 void __pmesg_mpz(msg_level_t level, const char *name, const char *var_name,
                  const mpz_t number, int base);
-#define pmesg_mpf(level, name, number)                                         \
+#define pmesg_mpf(level, name, number) \
     (__pmesg_mpf(level, name, #number, number))
 void __pmesg_mpf(msg_level_t level, const char *name, const char *var_name,
                  const mpf_t number);
-#define pmesg_hex(level, name, data_size, data)                                \
+#define pmesg_hex(level, name, data_size, data) \
     (__pmesg_hex(level, name, #data, data_size, data))
 void __pmesg_hex(msg_level_t level, const char *name, const char *var_name,
                  size_t data_size, const void *data);
-#define pmesg_stats(level, name, stats)                                        \
+#define pmesg_stats(level, name, stats) \
     (__pmesg_stats(level, name, #stats, stats))
 void __pmesg_stats(msg_level_t level, const char *name, const char *var_name,
                    const stats_t stats);
-#define pmesg_element(level, name, element)                                    \
+#define pmesg_element(level, name, element) \
     (__pmesg_element(level, name, #element, element))
 #if defined(PBC_SUPPORT)
 void __pmesg_element(msg_level_t level, const char *name, const char *var_name,
