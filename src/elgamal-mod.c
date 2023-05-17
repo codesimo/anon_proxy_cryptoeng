@@ -106,7 +106,7 @@ void elgamal_mod_h1(elgamal_mod_params_t params, uint8_t *input, size_t input_si
         mpz_set_ui(output, 1);
 }
 
-void elgamal_mod_h2(elgamal_mod_params_t params, uint8_t *input, size_t input_size, uint8_t *output)
+void elgamal_mod_h2(uint8_t *input, size_t input_size, uint8_t *output)
 {
     struct elgamal_mod_hash_ctx ctx;
     elgamal_mod_hash_ctx_init(&ctx);
@@ -132,10 +132,11 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
     size_t r_bytes_size = mpz_sizeinbase(r, 256);
     assert(r_bytes_size == params->q_bits / 8);
 
+    // Building r || m
     size_t h1_input_size = r_bytes_size + plaintext->m_size;
-
     uint8_t h1_in_bytes[h1_input_size];
     memset(h1_in_bytes, 0, h1_input_size);
+
     size_t x;
 
     mpz_export(h1_in_bytes, &x, 1, 1, 1, 0, r);
@@ -145,21 +146,24 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
     memcpy(h1_in_bytes + r_bytes_size, plaintext->m, plaintext->m_size);
     pmesg_hex(msg_very_verbose, "r||m", h1_input_size, h1_in_bytes);
 
+    // H1(r||m)
     mpz_t h1_res;
     mpz_init(h1_res);
 
     elgamal_mod_h1(params, h1_in_bytes, h1_input_size, h1_res);
     pmesg_mpz(msg_very_verbose, "H1(r||m)", h1_res);
 
-    // Set C1 = g^h1_res mod q
+    // C1 = g^h1_res mod q
     mpz_powm(ciphertext->c1, params->g, h1_res, params->p);
     pmesg_mpz(msg_verbose, "C1", ciphertext->c1);
 
+    // pk^h1_res mod p
     mpz_t h1_input;
     mpz_init(h1_input);
     mpz_powm(h1_input, params->pk, h1_res, params->p);
     pmesg_mpz(msg_very_verbose, "pk^H1", h1_input);
 
+    // H2(pk^h1_res)
     size_t h2_input_in_bytes = mpz_sizeinbase(h1_input, 256);
     uint8_t h2_input[h2_input_in_bytes];
     memset(h2_input, 0, h2_input_in_bytes);
@@ -170,7 +174,7 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
     uint8_t h2_res[elgamal_mod_ske_key_size];
     memset(h2_res, 0, elgamal_mod_ske_key_size);
 
-    elgamal_mod_h2(params, h2_input, h2_input_in_bytes, h2_res);
+    elgamal_mod_h2(h2_input, h2_input_in_bytes, h2_res);
 
     pmesg_hex(msg_very_verbose, "H2", elgamal_mod_ske_key_size, h2_res);
 
@@ -184,6 +188,7 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
 
     elgamal_mod_ske_set_encypt_key(&(params->ske_ctx), h2_res);
 
+    // C2 = SKE(H2(pk^h1_res), r||m)
     elgamal_mod_ske_block_encrypt(&(params->ske_ctx),
                                   (nettle_cipher_func *)elgamal_mod_ske_encrypt,
                                   elgamal_mod_ske_block_size,
@@ -199,11 +204,13 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
 
 void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphertext, elgamal_plaintext_t plaintext)
 {
+    // C1^sk mod p
     mpz_t h2_input;
     mpz_init(h2_input);
     mpz_powm(h2_input, ciphertext->c1, params->sk, params->p);
     pmesg_mpz(msg_very_verbose, "C1^sk (H2_input)", h2_input);
 
+    // H2(C1^sk)
     size_t h2_input_size = mpz_sizeinbase(h2_input, 256);
     uint8_t h2_input_bytes[h2_input_size];
 
@@ -214,10 +221,11 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
     uint8_t h2_res[elgamal_mod_ske_key_size];
     memset(h2_res, 0, elgamal_mod_ske_key_size);
 
-    elgamal_mod_h2(params, h2_input_bytes, h2_input_size, h2_res);
+    elgamal_mod_h2(h2_input_bytes, h2_input_size, h2_res);
 
     pmesg_hex(msg_very_verbose, "H2", elgamal_mod_ske_key_size, h2_res);
 
+    // r'||m' = SKE.Dec(H2(C1^sk), C2)
     elgamal_mod_ske_set_decrypt_key(&(params->ske_ctx), h2_res);
     uint8_t ctr[elgamal_mod_ske_block_size];
     memset(ctr, 0, elgamal_mod_ske_block_size);
@@ -235,6 +243,7 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
 
     pmesg_hex(msg_verbose, "r'||m'", ciphertext->c2_size, dec_output);
 
+    // H1(r'||m')
     mpz_t h1_res;
     mpz_init(h1_res);
 
@@ -242,12 +251,17 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
     pmesg_mpz(msg_very_verbose, "H1(r'||m')", h1_res);
 
     mpz_powm(h1_res, params->g, h1_res, params->p);
+
+    // C1 =?= g^H1(r'||m')
     assert(mpz_cmp(h1_res, ciphertext->c1) == 0);
 
+    // m = m', r = r'
     plaintext->m_size = ciphertext->c2_size - params->q_bits / 8;
     plaintext->m = (uint8_t *)malloc(plaintext->m_size * sizeof(uint8_t));
     memcpy(plaintext->m, dec_output + params->q_bits / 8, plaintext->m_size);
     uint8_t *r_first = dec_output;
     pmesg_hex(msg_verbose, "r'", params->q_bits / 8, r_first);
     pmesg_hex(msg_verbose, "m'", plaintext->m_size, plaintext->m);
+
+    mpz_clears(h2_input, h1_res, NULL);
 }

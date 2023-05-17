@@ -69,8 +69,7 @@ void elgamal_mod_init(elgamal_mod_params_t params, size_t lambda,
 void elgamal_mod_h1(elgamal_mod_params_t params,
                     uint8_t *input, size_t input_size, mpz_t output);
 
-void elgamal_mod_h2(elgamal_mod_params_t params,
-                    uint8_t *input, size_t input_size, uint8_t *output);
+void elgamal_mod_h2(uint8_t *input, size_t input_size, uint8_t *output);
 
 void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng,
                          elgamal_plaintext_t plaintext, elgamal_ciphertext_t ciphertext);
