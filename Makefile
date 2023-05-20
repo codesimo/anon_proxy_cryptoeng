@@ -130,113 +130,126 @@ libs/fast:
 .PHONY : libs/fast
 
 #=============================================================================
-# Target rules for targets named anon-proxy
+# Target rules for targets named main-elgamal-mod
 
 # Build rule for target.
-anon-proxy: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 anon-proxy
-.PHONY : anon-proxy
+main-elgamal-mod: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main-elgamal-mod
+.PHONY : main-elgamal-mod
 
 # fast build rule for target.
-anon-proxy/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/build
-.PHONY : anon-proxy/fast
+main-elgamal-mod/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/build
+.PHONY : main-elgamal-mod/fast
 
-lib/lib-mesg.o: lib/lib-mesg.c.o
-.PHONY : lib/lib-mesg.o
+#=============================================================================
+# Target rules for targets named bench-elgamal-mod
 
-# target to build an object file
-lib/lib-mesg.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-mesg.c.o
-.PHONY : lib/lib-mesg.c.o
+# Build rule for target.
+bench-elgamal-mod: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 bench-elgamal-mod
+.PHONY : bench-elgamal-mod
 
-lib/lib-mesg.i: lib/lib-mesg.c.i
-.PHONY : lib/lib-mesg.i
+# fast build rule for target.
+bench-elgamal-mod/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/build
+.PHONY : bench-elgamal-mod/fast
 
-# target to preprocess a source file
-lib/lib-mesg.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-mesg.c.i
-.PHONY : lib/lib-mesg.c.i
-
-lib/lib-mesg.s: lib/lib-mesg.c.s
-.PHONY : lib/lib-mesg.s
-
-# target to generate assembly for a file
-lib/lib-mesg.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-mesg.c.s
-.PHONY : lib/lib-mesg.c.s
-
-lib/lib-misc.o: lib/lib-misc.c.o
-.PHONY : lib/lib-misc.o
+libs/lib-mesg.o: libs/lib-mesg.c.o
+.PHONY : libs/lib-mesg.o
 
 # target to build an object file
-lib/lib-misc.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-misc.c.o
-.PHONY : lib/lib-misc.c.o
+libs/lib-mesg.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-mesg.c.o
+.PHONY : libs/lib-mesg.c.o
 
-lib/lib-misc.i: lib/lib-misc.c.i
-.PHONY : lib/lib-misc.i
+libs/lib-mesg.i: libs/lib-mesg.c.i
+.PHONY : libs/lib-mesg.i
 
 # target to preprocess a source file
-lib/lib-misc.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-misc.c.i
-.PHONY : lib/lib-misc.c.i
+libs/lib-mesg.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-mesg.c.i
+.PHONY : libs/lib-mesg.c.i
 
-lib/lib-misc.s: lib/lib-misc.c.s
-.PHONY : lib/lib-misc.s
+libs/lib-mesg.s: libs/lib-mesg.c.s
+.PHONY : libs/lib-mesg.s
 
 # target to generate assembly for a file
-lib/lib-misc.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-misc.c.s
-.PHONY : lib/lib-misc.c.s
+libs/lib-mesg.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-mesg.c.s
+.PHONY : libs/lib-mesg.c.s
 
-lib/lib-timing.o: lib/lib-timing.c.o
-.PHONY : lib/lib-timing.o
+libs/lib-misc.o: libs/lib-misc.c.o
+.PHONY : libs/lib-misc.o
 
 # target to build an object file
-lib/lib-timing.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-timing.c.o
-.PHONY : lib/lib-timing.c.o
+libs/lib-misc.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-misc.c.o
+.PHONY : libs/lib-misc.c.o
 
-lib/lib-timing.i: lib/lib-timing.c.i
-.PHONY : lib/lib-timing.i
+libs/lib-misc.i: libs/lib-misc.c.i
+.PHONY : libs/lib-misc.i
 
 # target to preprocess a source file
-lib/lib-timing.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-timing.c.i
-.PHONY : lib/lib-timing.c.i
+libs/lib-misc.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-misc.c.i
+.PHONY : libs/lib-misc.c.i
 
-lib/lib-timing.s: lib/lib-timing.c.s
-.PHONY : lib/lib-timing.s
+libs/lib-misc.s: libs/lib-misc.c.s
+.PHONY : libs/lib-misc.s
 
 # target to generate assembly for a file
-lib/lib-timing.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/lib/lib-timing.c.s
-.PHONY : lib/lib-timing.c.s
+libs/lib-misc.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-misc.c.s
+.PHONY : libs/lib-misc.c.s
 
-src/anon-proxy.o: src/anon-proxy.c.o
-.PHONY : src/anon-proxy.o
+libs/lib-timing.o: libs/lib-timing.c.o
+.PHONY : libs/lib-timing.o
 
 # target to build an object file
-src/anon-proxy.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.o
-.PHONY : src/anon-proxy.c.o
+libs/lib-timing.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-timing.c.o
+.PHONY : libs/lib-timing.c.o
 
-src/anon-proxy.i: src/anon-proxy.c.i
-.PHONY : src/anon-proxy.i
+libs/lib-timing.i: libs/lib-timing.c.i
+.PHONY : libs/lib-timing.i
 
 # target to preprocess a source file
-src/anon-proxy.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.i
-.PHONY : src/anon-proxy.c.i
+libs/lib-timing.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-timing.c.i
+.PHONY : libs/lib-timing.c.i
 
-src/anon-proxy.s: src/anon-proxy.c.s
-.PHONY : src/anon-proxy.s
+libs/lib-timing.s: libs/lib-timing.c.s
+.PHONY : libs/lib-timing.s
 
 # target to generate assembly for a file
-src/anon-proxy.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.s
-.PHONY : src/anon-proxy.c.s
+libs/lib-timing.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-timing.c.s
+.PHONY : libs/lib-timing.c.s
+
+src/bench-elgamal-mod.o: src/bench-elgamal-mod.c.o
+.PHONY : src/bench-elgamal-mod.o
+
+# target to build an object file
+src/bench-elgamal-mod.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/src/bench-elgamal-mod.c.o
+.PHONY : src/bench-elgamal-mod.c.o
+
+src/bench-elgamal-mod.i: src/bench-elgamal-mod.c.i
+.PHONY : src/bench-elgamal-mod.i
+
+# target to preprocess a source file
+src/bench-elgamal-mod.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/src/bench-elgamal-mod.c.i
+.PHONY : src/bench-elgamal-mod.c.i
+
+src/bench-elgamal-mod.s: src/bench-elgamal-mod.c.s
+.PHONY : src/bench-elgamal-mod.s
+
+# target to generate assembly for a file
+src/bench-elgamal-mod.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/src/bench-elgamal-mod.c.s
+.PHONY : src/bench-elgamal-mod.c.s
 
 src/elgamal-mod.o: src/elgamal-mod.c.o
 .PHONY : src/elgamal-mod.o
@@ -262,6 +275,30 @@ src/elgamal-mod.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/src/elgamal-mod.c.s
 .PHONY : src/elgamal-mod.c.s
 
+src/main-elgamal-mod.o: src/main-elgamal-mod.c.o
+.PHONY : src/main-elgamal-mod.o
+
+# target to build an object file
+src/main-elgamal-mod.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/src/main-elgamal-mod.c.o
+.PHONY : src/main-elgamal-mod.c.o
+
+src/main-elgamal-mod.i: src/main-elgamal-mod.c.i
+.PHONY : src/main-elgamal-mod.i
+
+# target to preprocess a source file
+src/main-elgamal-mod.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/src/main-elgamal-mod.c.i
+.PHONY : src/main-elgamal-mod.c.i
+
+src/main-elgamal-mod.s: src/main-elgamal-mod.c.s
+.PHONY : src/main-elgamal-mod.s
+
+# target to generate assembly for a file
+src/main-elgamal-mod.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/src/main-elgamal-mod.c.s
+.PHONY : src/main-elgamal-mod.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -270,23 +307,27 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... anon-proxy"
+	@echo "... bench-elgamal-mod"
 	@echo "... libs"
-	@echo "... lib/lib-mesg.o"
-	@echo "... lib/lib-mesg.i"
-	@echo "... lib/lib-mesg.s"
-	@echo "... lib/lib-misc.o"
-	@echo "... lib/lib-misc.i"
-	@echo "... lib/lib-misc.s"
-	@echo "... lib/lib-timing.o"
-	@echo "... lib/lib-timing.i"
-	@echo "... lib/lib-timing.s"
-	@echo "... src/anon-proxy.o"
-	@echo "... src/anon-proxy.i"
-	@echo "... src/anon-proxy.s"
+	@echo "... main-elgamal-mod"
+	@echo "... libs/lib-mesg.o"
+	@echo "... libs/lib-mesg.i"
+	@echo "... libs/lib-mesg.s"
+	@echo "... libs/lib-misc.o"
+	@echo "... libs/lib-misc.i"
+	@echo "... libs/lib-misc.s"
+	@echo "... libs/lib-timing.o"
+	@echo "... libs/lib-timing.i"
+	@echo "... libs/lib-timing.s"
+	@echo "... src/bench-elgamal-mod.o"
+	@echo "... src/bench-elgamal-mod.i"
+	@echo "... src/bench-elgamal-mod.s"
 	@echo "... src/elgamal-mod.o"
 	@echo "... src/elgamal-mod.i"
 	@echo "... src/elgamal-mod.s"
+	@echo "... src/main-elgamal-mod.o"
+	@echo "... src/main-elgamal-mod.i"
+	@echo "... src/main-elgamal-mod.s"
 .PHONY : help
 
 

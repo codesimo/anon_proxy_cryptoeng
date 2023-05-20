@@ -1,5 +1,6 @@
 build/*
 bin/*
+CMakeFiles
 !build/.gitkeep
 !bin/.gitkeep
-
+.vscode

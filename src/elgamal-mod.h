@@ -25,6 +25,14 @@
 #define elgamal_mod_ske_decrypt aes256_encrypt // same as encrypt because of CTR
 #define elgamal_mod_ske_block_decrypt ctr_crypt
 
+enum elgamal_mod_lambda
+{
+    elgamal_mod_lambda_80 = 80,
+    elgamal_mod_lambda_112 = 112,
+    elgamal_mod_lambda_128 = 128
+};
+typedef enum elgamal_mod_lambda elgamal_mod_lambda;
+
 struct elgamal_plaintext_struct
 {
     uint8_t *m;
@@ -63,7 +71,7 @@ struct elgamal_mod_params_struct
 typedef struct elgamal_mod_params_struct *elgamal_mod_params_ptr;
 typedef struct elgamal_mod_params_struct elgamal_mod_params_t[1];
 
-void elgamal_mod_init(elgamal_mod_params_t params, size_t lambda,
+void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda,
                       gmp_randstate_t prng);
 
 void elgamal_mod_h1(elgamal_mod_params_t params,

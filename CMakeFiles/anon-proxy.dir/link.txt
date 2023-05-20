@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/anon-proxy.dir/src/anon-proxy.c.o -o bin/elgamal-mod/anon-proxy  build/liblibs.a -lm -lgmp -lnettle 

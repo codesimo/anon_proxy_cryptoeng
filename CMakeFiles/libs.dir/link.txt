@@ -1,2 +1,0 @@
-/usr/bin/ar qc build/liblibs.a CMakeFiles/libs.dir/lib/lib-mesg.c.o CMakeFiles/libs.dir/lib/lib-misc.c.o CMakeFiles/libs.dir/lib/lib-timing.c.o CMakeFiles/libs.dir/src/elgamal-mod.c.o
-/usr/bin/ranlib build/liblibs.a

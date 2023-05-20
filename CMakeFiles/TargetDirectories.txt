@@ -1,4 +1,0 @@
-/home/ubuntu/cryptoeng/SLWL11/CMakeFiles/libs.dir
-/home/ubuntu/cryptoeng/SLWL11/CMakeFiles/anon-proxy.dir
-/home/ubuntu/cryptoeng/SLWL11/CMakeFiles/edit_cache.dir
-/home/ubuntu/cryptoeng/SLWL11/CMakeFiles/rebuild_cache.dir

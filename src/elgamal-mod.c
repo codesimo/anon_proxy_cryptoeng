@@ -6,7 +6,7 @@
 /* generazione delle chiavi per uno schema di cifratura Elgamal: possibilità di
  * lavorare nel sottogruppo di ordine primo q e/o di utilizzare precomputazione
  * sulle esponenziazioni a base fissa della cifratura */
-void elgamal_mod_init(elgamal_mod_params_t params, size_t lambda, gmp_randstate_t prng)
+void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gmp_randstate_t prng)
 {
     mpz_t k, a, tmp;
 
