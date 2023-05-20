@@ -155,6 +155,19 @@ bench-elgamal-mod/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/build
 .PHONY : bench-elgamal-mod/fast
 
+#=============================================================================
+# Target rules for targets named anon-proxy
+
+# Build rule for target.
+anon-proxy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 anon-proxy
+.PHONY : anon-proxy
+
+# fast build rule for target.
+anon-proxy/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/build
+.PHONY : anon-proxy/fast
+
 libs/lib-mesg.o: libs/lib-mesg.c.o
 .PHONY : libs/lib-mesg.o
 
@@ -226,6 +239,30 @@ libs/lib-timing.s: libs/lib-timing.c.s
 libs/lib-timing.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-timing.c.s
 .PHONY : libs/lib-timing.c.s
+
+src/anon-proxy.o: src/anon-proxy.c.o
+.PHONY : src/anon-proxy.o
+
+# target to build an object file
+src/anon-proxy.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.o
+.PHONY : src/anon-proxy.c.o
+
+src/anon-proxy.i: src/anon-proxy.c.i
+.PHONY : src/anon-proxy.i
+
+# target to preprocess a source file
+src/anon-proxy.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.i
+.PHONY : src/anon-proxy.c.i
+
+src/anon-proxy.s: src/anon-proxy.c.s
+.PHONY : src/anon-proxy.s
+
+# target to generate assembly for a file
+src/anon-proxy.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.s
+.PHONY : src/anon-proxy.c.s
 
 src/bench-elgamal-mod.o: src/bench-elgamal-mod.c.o
 .PHONY : src/bench-elgamal-mod.o
@@ -307,6 +344,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... anon-proxy"
 	@echo "... bench-elgamal-mod"
 	@echo "... libs"
 	@echo "... main-elgamal-mod"
@@ -319,6 +357,9 @@ help:
 	@echo "... libs/lib-timing.o"
 	@echo "... libs/lib-timing.i"
 	@echo "... libs/lib-timing.s"
+	@echo "... src/anon-proxy.o"
+	@echo "... src/anon-proxy.i"
+	@echo "... src/anon-proxy.s"
 	@echo "... src/bench-elgamal-mod.o"
 	@echo "... src/bench-elgamal-mod.i"
 	@echo "... src/bench-elgamal-mod.s"

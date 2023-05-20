@@ -16,6 +16,7 @@ add_library(libs ${LIBRARY_SOURCES} ${LIBRARY_HEADERS} ${ELGAMAL_MOD}  )
 
 add_executable(main-elgamal-mod src/main-elgamal-mod.c)
 add_executable(bench-elgamal-mod src/bench-elgamal-mod.c)
+add_executable(anon-proxy src/anon-proxy.c)
 
 # set output directory of executable
 set_target_properties(
@@ -32,3 +33,4 @@ set_target_properties(
 
 target_link_libraries(main-elgamal-mod libs m gmp nettle)
 target_link_libraries(bench-elgamal-mod libs m gmp nettle)
+target_link_libraries(anon-proxy libs m gmp nettle)
