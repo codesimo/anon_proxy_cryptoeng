@@ -12,7 +12,9 @@ file(GLOB LIBRARY_SOURCES libs/*.c)
 file(GLOB LIBRARY_HEADERS libs/*.h)
 file(GLOB ELGAMAL_MOD src/elgamal-mod*)
 
-add_library(libs ${LIBRARY_SOURCES} ${LIBRARY_HEADERS} ${ELGAMAL_MOD}  )
+add_library(mdr ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
+
+add_library(elgamal-mod ${ELGAMAL_MOD})
 
 add_executable(main-elgamal-mod src/main-elgamal-mod.c)
 add_executable(bench-elgamal-mod src/bench-elgamal-mod.c)
@@ -31,6 +33,6 @@ set_target_properties(
         RUNTIME_OUTPUT_DIRECTORY "${BENCHMARK_OUTPUT_PATH}"
 )
 
-target_link_libraries(main-elgamal-mod libs m gmp nettle)
-target_link_libraries(bench-elgamal-mod libs m gmp nettle)
-target_link_libraries(anon-proxy libs m gmp nettle)
+target_link_libraries(main-elgamal-mod mdr elgamal-mod m gmp nettle)
+target_link_libraries(bench-elgamal-mod mdr elgamal-mod m gmp nettle)
+target_link_libraries(anon-proxy mdr elgamal-mod m gmp nettle)

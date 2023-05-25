@@ -117,17 +117,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named libs
+# Target rules for targets named mdr
 
 # Build rule for target.
-libs: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 libs
-.PHONY : libs
+mdr: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mdr
+.PHONY : mdr
 
 # fast build rule for target.
-libs/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/build
-.PHONY : libs/fast
+mdr/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/build
+.PHONY : mdr/fast
+
+#=============================================================================
+# Target rules for targets named elgamal-mod
+
+# Build rule for target.
+elgamal-mod: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 elgamal-mod
+.PHONY : elgamal-mod
+
+# fast build rule for target.
+elgamal-mod/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/build
+.PHONY : elgamal-mod/fast
 
 #=============================================================================
 # Target rules for targets named main-elgamal-mod
@@ -173,7 +186,7 @@ libs/lib-mesg.o: libs/lib-mesg.c.o
 
 # target to build an object file
 libs/lib-mesg.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-mesg.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-mesg.c.o
 .PHONY : libs/lib-mesg.c.o
 
 libs/lib-mesg.i: libs/lib-mesg.c.i
@@ -181,7 +194,7 @@ libs/lib-mesg.i: libs/lib-mesg.c.i
 
 # target to preprocess a source file
 libs/lib-mesg.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-mesg.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-mesg.c.i
 .PHONY : libs/lib-mesg.c.i
 
 libs/lib-mesg.s: libs/lib-mesg.c.s
@@ -189,7 +202,7 @@ libs/lib-mesg.s: libs/lib-mesg.c.s
 
 # target to generate assembly for a file
 libs/lib-mesg.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-mesg.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-mesg.c.s
 .PHONY : libs/lib-mesg.c.s
 
 libs/lib-misc.o: libs/lib-misc.c.o
@@ -197,7 +210,7 @@ libs/lib-misc.o: libs/lib-misc.c.o
 
 # target to build an object file
 libs/lib-misc.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-misc.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-misc.c.o
 .PHONY : libs/lib-misc.c.o
 
 libs/lib-misc.i: libs/lib-misc.c.i
@@ -205,7 +218,7 @@ libs/lib-misc.i: libs/lib-misc.c.i
 
 # target to preprocess a source file
 libs/lib-misc.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-misc.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-misc.c.i
 .PHONY : libs/lib-misc.c.i
 
 libs/lib-misc.s: libs/lib-misc.c.s
@@ -213,7 +226,7 @@ libs/lib-misc.s: libs/lib-misc.c.s
 
 # target to generate assembly for a file
 libs/lib-misc.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-misc.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-misc.c.s
 .PHONY : libs/lib-misc.c.s
 
 libs/lib-timing.o: libs/lib-timing.c.o
@@ -221,7 +234,7 @@ libs/lib-timing.o: libs/lib-timing.c.o
 
 # target to build an object file
 libs/lib-timing.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-timing.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-timing.c.o
 .PHONY : libs/lib-timing.c.o
 
 libs/lib-timing.i: libs/lib-timing.c.i
@@ -229,7 +242,7 @@ libs/lib-timing.i: libs/lib-timing.c.i
 
 # target to preprocess a source file
 libs/lib-timing.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-timing.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-timing.c.i
 .PHONY : libs/lib-timing.c.i
 
 libs/lib-timing.s: libs/lib-timing.c.s
@@ -237,7 +250,7 @@ libs/lib-timing.s: libs/lib-timing.c.s
 
 # target to generate assembly for a file
 libs/lib-timing.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/libs/lib-timing.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-timing.c.s
 .PHONY : libs/lib-timing.c.s
 
 src/anon-proxy.o: src/anon-proxy.c.o
@@ -293,7 +306,7 @@ src/elgamal-mod.o: src/elgamal-mod.c.o
 
 # target to build an object file
 src/elgamal-mod.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/src/elgamal-mod.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/elgamal-mod.c.o
 .PHONY : src/elgamal-mod.c.o
 
 src/elgamal-mod.i: src/elgamal-mod.c.i
@@ -301,7 +314,7 @@ src/elgamal-mod.i: src/elgamal-mod.c.i
 
 # target to preprocess a source file
 src/elgamal-mod.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/src/elgamal-mod.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/elgamal-mod.c.i
 .PHONY : src/elgamal-mod.c.i
 
 src/elgamal-mod.s: src/elgamal-mod.c.s
@@ -309,7 +322,7 @@ src/elgamal-mod.s: src/elgamal-mod.c.s
 
 # target to generate assembly for a file
 src/elgamal-mod.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/libs.dir/build.make CMakeFiles/libs.dir/src/elgamal-mod.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/elgamal-mod.c.s
 .PHONY : src/elgamal-mod.c.s
 
 src/main-elgamal-mod.o: src/main-elgamal-mod.c.o
@@ -346,8 +359,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... anon-proxy"
 	@echo "... bench-elgamal-mod"
-	@echo "... libs"
+	@echo "... elgamal-mod"
 	@echo "... main-elgamal-mod"
+	@echo "... mdr"
 	@echo "... libs/lib-mesg.o"
 	@echo "... libs/lib-mesg.i"
 	@echo "... libs/lib-mesg.s"
