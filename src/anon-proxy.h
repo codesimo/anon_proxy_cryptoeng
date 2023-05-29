@@ -17,6 +17,8 @@ struct anon_proxy_params_struct
     size_t q_bits;
     size_t lambda;
 
+    elgamal_mod_params_t elgamal_params;
+
     /* elementi pubblici: */
     mpz_t p;
     mpz_t q;
@@ -45,12 +47,33 @@ struct anon_proxy_rekey_struct
 {
     mpz_t rekey1[2];
     mpz_t rekey2_1;
-    uint8_t *rekey2_2;
-    size_t rekey2_2_size;
+    elgamal_ciphertext_t rekey2_2;
 };
 
 typedef struct anon_proxy_rekey_struct *anon_proxy_rekey_ptr;
 typedef struct anon_proxy_rekey_struct anon_proxy_rekey_t[1];
+
+struct anon_proxy_plaintext_struct
+{
+    uint8_t *m;
+    size_t m_size;
+};
+typedef struct anon_proxy_plaintext_struct *anon_proxy_plaintext_ptr;
+typedef struct anon_proxy_plaintext_struct anon_proxy_plaintext_t[1];
+
+struct anon_proxy_ciphertext_struct
+{
+    mpz_t A;
+    mpz_t B;
+    mpz_t C;
+    uint8_t k[anon_proxy_hash_size];
+    uint8_t *D;
+    size_t D_size;
+    mpz_t S;
+};
+
+typedef struct anon_proxy_ciphertext_struct *anon_proxy_ciphertext_ptr;
+typedef struct anon_proxy_ciphertext_struct anon_proxy_ciphertext_t[1];
 
 void anon_proxy_h1(anon_proxy_params_t params,
                    uint8_t *input, size_t input_size, mpz_t output);
@@ -66,6 +89,8 @@ void anon_proxy_init(anon_proxy_params_t params,
 
 void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk);
 
-void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, anon_proxy_rekey_t rekey);
+void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, elgamal_mod_params_t elgamal_mod_params, anon_proxy_rekey_t rekey);
+
+void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_pk_t pk, anon_proxy_plaintext_t plaintext, anon_proxy_ciphertext_t ciphertext);
 
 #endif // ANON_PROXY_H

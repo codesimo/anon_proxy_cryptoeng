@@ -88,7 +88,7 @@ void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_pr
     mpz_clears(tmp0, tmp1, NULL);
 }
 
-void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, anon_proxy_rekey_t rekey)
+void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, elgamal_mod_params_t elgamal_mod_params, anon_proxy_rekey_t rekey)
 {
     mpz_t a1, a2, b1, b2, h4_0, h4_1, tmp;
     mpz_inits(a1, a2, b1, b2, tmp, NULL);
@@ -145,9 +145,55 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
     mpz_set(rekey->rekey1[1], b1);
 
     mpz_powm(rekey->rekey2_1, params->g, h1_output, params->p);
-    mpz_powm(tmp,pk->pk1,h1_output,params->p);
 
-    uint8_t h2_output[anon_proxy_hash_size];
-    anon_proxy_h2(params,tmp,h2_output);
-    //TODO: finish rekeygen
+    // mpz_powm(tmp, pk->pk1, h1_output, params->p);
+
+    // uint8_t h2_output[anon_proxy_hash_size];
+    // anon_proxy_h2(params, tmp, h2_output);
+
+    mpz_set(elgamal_mod_params->pk, pk->pk1);
+
+    // TODO: Forse a2|b2 == m?
+    elgamal_plaintext_t plaintext;
+    plaintext->m_size = a2_size + b2_size;
+    plaintext->m = r_a2_b2 + r_size;
+
+    elgamal_ciphertext_t ciphertext;
+
+    elgamal_mod_encrypt(params->elgamal_params, prng, plaintext, ciphertext);
+
+    mpz_set(rekey->rekey2_2->c1, ciphertext->c1);
+    rekey->rekey2_2->c2 = ciphertext->c2;
+    rekey->rekey2_2->c2_size = ciphertext->c2_size;
+}
+
+void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_pk_t pk, anon_proxy_plaintext_t plaintext, anon_proxy_ciphertext_t ciphertext)
+{
+    mpz_t r, r_1;
+    mpz_inits(r, r_1, NULL);
+    do
+    {
+        mpz_randomm(r, prng, params->q);
+        mpz_randomm(r_1, prng, params->q);
+    } while (mpz_cmp(r, r_1) == 0 || mpz_cmp_ui(r, 0) == 0 || mpz_cmp_ui(r_1, 0) == 0);
+    mpz_t A, B, C;
+    mpz_inits(A, B, C, NULL);
+    mpz_powm(A, params->g, r, params->p);
+    mpz_powm(B, pk->pk1, r, params->p);
+    mpz_powm(C, params->g, r_1, params->p);
+
+    mpz_t h2_input;
+    mpz_init(h2_input);
+    mpz_powm(h2_input, pk->pk2, r, params->p);
+
+    uint8_t h2_output[anon_proxy_hash_size]; //TODO: l??
+
+    anon_proxy_h2(params, h2_input, h2_output);
+
+    elgamal_ciphertext_t elgamal_ciphertext;
+
+    elgamal_mod_encrypt(params->elgamal_params, prng, plaintext, elgamal_ciphertext);
+
+    
+
 }
