@@ -8,7 +8,6 @@
  * sulle esponenziazioni a base fissa della cifratura */
 void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gmp_randstate_t prng)
 {
-    mpz_t k, a, tmp;
 
     pmesg(msg_verbose, "Initialization...");
 
@@ -17,6 +16,7 @@ void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gm
     assert((lambda == 80) || (lambda == 112) || (lambda == 128));
     assert(prng);
 
+    mpz_t k, a, tmp;
     mpz_inits(k, a, tmp, NULL);
     mpz_inits(params->p, params->q, params->g, params->pk, params->sk, NULL);
 

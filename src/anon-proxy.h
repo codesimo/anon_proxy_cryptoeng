@@ -1,8 +1,25 @@
 #ifndef ANON_PROXY_H
 #define ANON_PROXY_H
-#include "elgamal-mod.h"
+// #include "elgamal-mod.h"
+#include "lib-misc.h"
+#include "lib-mesg.h"
+
+#include <gmp.h>
+#include <nettle/sha3.h>
+#include <nettle/aes.h>
+#include <nettle/ctr.h>
 
 #define anon_proxy_mr_iterations 12
+
+#define anon_proxy_ske_key_size 32
+#define anon_proxy_ske_block_size 16
+#define anon_proxy_ske_ctx aes256_ctx
+#define anon_proxy_ske_set_encypt_key aes256_set_encrypt_key
+#define anon_proxy_ske_set_decrypt_key aes256_set_encrypt_key // same as encrypt because of CTR
+#define anon_proxy_ske_encrypt aes256_encrypt
+#define anon_proxy_ske_block_encrypt ctr_crypt
+#define anon_proxy_ske_decrypt aes256_encrypt // same as encrypt because of CTR
+#define anon_proxy_ske_block_decrypt ctr_crypt
 
 #define anon_proxy_hash_size 32
 #define anon_proxy_hash_ctx sha3_256_ctx
@@ -10,14 +27,23 @@
 #define anon_proxy_hash_ctx_update sha3_256_update
 #define anon_proxy_hash_ctx_digest sha3_256_digest
 
+enum anon_proxy_lambda
+{
+    anon_proxy_lambda_80 = 80,
+    anon_proxy_lambda_112 = 112,
+    anon_proxy_lambda_128 = 128
+};
+
+typedef enum anon_proxy_lambda anon_proxy_lambda;
+
 struct anon_proxy_params_struct
 {
 
     size_t p_bits;
     size_t q_bits;
-    size_t lambda;
+    anon_proxy_lambda lambda;
 
-    elgamal_mod_params_t elgamal_params;
+    // elgamal_mod_params_t elgamal_params;
 
     /* elementi pubblici: */
     mpz_t p;
@@ -47,7 +73,8 @@ struct anon_proxy_rekey_struct
 {
     mpz_t rekey1[2];
     mpz_t rekey2_1;
-    elgamal_ciphertext_t rekey2_2;
+    uint8_t *rekey2_2;
+    size_t rekey2_2_size;
 };
 
 typedef struct anon_proxy_rekey_struct *anon_proxy_rekey_ptr;
@@ -85,11 +112,11 @@ void anon_proxy_h3(anon_proxy_params_t params, mpz_t input, mpz_t output);
 void anon_proxy_h4(anon_proxy_params_t params, uint8_t *input, size_t input_size, mpz_t output);
 
 void anon_proxy_init(anon_proxy_params_t params,
-                     gmp_randstate_t prng);
+                     gmp_randstate_t prng, anon_proxy_lambda lambda);
 
 void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk);
 
-void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, elgamal_mod_params_t elgamal_mod_params, anon_proxy_rekey_t rekey);
+void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, anon_proxy_rekey_t rekey);
 
 void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_pk_t pk, anon_proxy_plaintext_t plaintext, anon_proxy_ciphertext_t ciphertext);
 
