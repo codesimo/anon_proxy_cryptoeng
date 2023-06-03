@@ -143,6 +143,19 @@ elgamal-mod/fast:
 .PHONY : elgamal-mod/fast
 
 #=============================================================================
+# Target rules for targets named anon-proxy
+
+# Build rule for target.
+anon-proxy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 anon-proxy
+.PHONY : anon-proxy
+
+# fast build rule for target.
+anon-proxy/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/build
+.PHONY : anon-proxy/fast
+
+#=============================================================================
 # Target rules for targets named main-elgamal-mod
 
 # Build rule for target.
@@ -169,17 +182,17 @@ bench-elgamal-mod/fast:
 .PHONY : bench-elgamal-mod/fast
 
 #=============================================================================
-# Target rules for targets named anon-proxy
+# Target rules for targets named main-anon-proxy
 
 # Build rule for target.
-anon-proxy: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 anon-proxy
-.PHONY : anon-proxy
+main-anon-proxy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main-anon-proxy
+.PHONY : main-anon-proxy
 
 # fast build rule for target.
-anon-proxy/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/build
-.PHONY : anon-proxy/fast
+main-anon-proxy/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/build
+.PHONY : main-anon-proxy/fast
 
 libs/lib-mesg.o: libs/lib-mesg.c.o
 .PHONY : libs/lib-mesg.o
@@ -325,6 +338,30 @@ src/elgamal-mod.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/elgamal-mod.c.s
 .PHONY : src/elgamal-mod.c.s
 
+src/main-anon-proxy.o: src/main-anon-proxy.c.o
+.PHONY : src/main-anon-proxy.o
+
+# target to build an object file
+src/main-anon-proxy.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/src/main-anon-proxy.c.o
+.PHONY : src/main-anon-proxy.c.o
+
+src/main-anon-proxy.i: src/main-anon-proxy.c.i
+.PHONY : src/main-anon-proxy.i
+
+# target to preprocess a source file
+src/main-anon-proxy.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/src/main-anon-proxy.c.i
+.PHONY : src/main-anon-proxy.c.i
+
+src/main-anon-proxy.s: src/main-anon-proxy.c.s
+.PHONY : src/main-anon-proxy.s
+
+# target to generate assembly for a file
+src/main-anon-proxy.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/src/main-anon-proxy.c.s
+.PHONY : src/main-anon-proxy.c.s
+
 src/main-elgamal-mod.o: src/main-elgamal-mod.c.o
 .PHONY : src/main-elgamal-mod.o
 
@@ -360,6 +397,7 @@ help:
 	@echo "... anon-proxy"
 	@echo "... bench-elgamal-mod"
 	@echo "... elgamal-mod"
+	@echo "... main-anon-proxy"
 	@echo "... main-elgamal-mod"
 	@echo "... mdr"
 	@echo "... libs/lib-mesg.o"
@@ -380,6 +418,9 @@ help:
 	@echo "... src/elgamal-mod.o"
 	@echo "... src/elgamal-mod.i"
 	@echo "... src/elgamal-mod.s"
+	@echo "... src/main-anon-proxy.o"
+	@echo "... src/main-anon-proxy.i"
+	@echo "... src/main-anon-proxy.s"
 	@echo "... src/main-elgamal-mod.o"
 	@echo "... src/main-elgamal-mod.i"
 	@echo "... src/main-elgamal-mod.s"

@@ -15,10 +15,13 @@ file(GLOB ELGAMAL_MOD src/elgamal-mod*)
 add_library(mdr ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
 
 add_library(elgamal-mod ${ELGAMAL_MOD})
+add_library(anon-proxy src/anon-proxy.c src/anon-proxy.h)
 
 add_executable(main-elgamal-mod src/main-elgamal-mod.c)
 add_executable(bench-elgamal-mod src/bench-elgamal-mod.c)
-add_executable(anon-proxy src/anon-proxy.c)
+
+add_executable(main-anon-proxy src/main-anon-proxy.c)
+
 
 # set output directory of executable
 set_target_properties(
@@ -35,4 +38,5 @@ set_target_properties(
 
 target_link_libraries(main-elgamal-mod mdr elgamal-mod m gmp nettle)
 target_link_libraries(bench-elgamal-mod mdr elgamal-mod m gmp nettle)
-target_link_libraries(anon-proxy mdr elgamal-mod m gmp nettle)
+
+target_link_libraries(main-anon-proxy mdr anon-proxy m gmp nettle)
