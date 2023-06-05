@@ -102,6 +102,19 @@ struct anon_proxy_ciphertext_struct
 typedef struct anon_proxy_ciphertext_struct *anon_proxy_ciphertext_ptr;
 typedef struct anon_proxy_ciphertext_struct anon_proxy_ciphertext_t[1];
 
+struct anon_proxy_reencrypted_ciphertext_struct
+{
+    mpz_t A_1;
+    mpz_t B_1;
+    uint8_t *D;
+    size_t D_size;
+    mpz_t U1;
+    uint8_t *U2;
+    size_t U2_size;
+};
+typedef struct anon_proxy_reencrypted_ciphertext_struct *anon_proxy_reencrypted_ciphertext_ptr;
+typedef struct anon_proxy_reencrypted_ciphertext_struct anon_proxy_reencrypted_ciphertext_t[1];
+
 void anon_proxy_h1(anon_proxy_params_t params,
                    uint8_t *input, size_t input_size, mpz_t output);
 
@@ -120,6 +133,9 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
 
 void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_pk_t pk, anon_proxy_plaintext_t plaintext, anon_proxy_ciphertext_t ciphertext);
 
-void anon_proxy_decrypt(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_ciphertext_t ciphertext, anon_proxy_plaintext_t plaintext, bool original);
+void anon_proxy_decrypt_original(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_ciphertext_t ciphertext, anon_proxy_plaintext_t plaintext);
 
+void anon_proxy_reencrypt(anon_proxy_params_t params, anon_proxy_rekey_t rekey, anon_proxy_ciphertext_t ciphertext, anon_proxy_reencrypted_ciphertext_t reencrypted_ciphertext);
+
+void anon_proxy_decrypt_reencrypted(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_reencrypted_ciphertext_t reencrypted_ciphertext, anon_proxy_plaintext_t plaintext);
 #endif // ANON_PROXY_H

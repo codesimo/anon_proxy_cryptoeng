@@ -122,7 +122,7 @@ void anon_proxy_init(anon_proxy_params_t params,
         mpz_powm(tmp, params->g, params->q, params->p);
     } while ((mpz_cmp_ui(params->g, 1) == 0) || (mpz_cmp_ui(tmp, 1) != 0));
 
-    pmesg(msg_verbose, "Initialization completed");
+    pmesg(msg_very_verbose, "-------------Initialization completed-------------");
     pmesg_mpz(msg_very_verbose, "modulo", params->p);
     pmesg_mpz(msg_very_verbose, "ordine del sottogruppo", params->q);
     pmesg_mpz(msg_very_verbose, "generatore del sottogruppo", params->g);
@@ -152,6 +152,7 @@ void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_pr
     mpz_add(tmp0, tmp0, tmp1);
     mpz_powm(pk->pk2, params->g, tmp0, params->p);
 
+    pmesg(msg_verbose, "-------------Key generation completed-------------");
     pmesg_mpz(msg_verbose, "sk", sk->sk);
     pmesg_mpz(msg_verbose, "pk1", pk->pk1);
     pmesg_mpz(msg_verbose, "pk2", pk->pk2);
@@ -234,6 +235,9 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
     uint8_t h2_output[anon_proxy_ske_key_size];
     anon_proxy_h2(params, tmp, h2_output);
 
+    rekey->rekey2_2_size = r_size + a2_size + b2_size + pad;
+    rekey->rekey2_2 = malloc(rekey->rekey2_2_size);
+
     struct anon_proxy_ske_ctx ctx;
     anon_proxy_ske_set_encypt_key(&(ctx), h2_output);
 
@@ -248,9 +252,12 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
                                  rekey->rekey2_2,
                                  r_a2_b2);
 
-    rekey->rekey2_2_size = r_size + a2_size + b2_size + pad;
-
     mpz_clears(a1, a2, b1, b2, tmp, r, h1_output, NULL);
+
+    pmesg_mpz(msg_verbose, "a1", rekey->rekey1[0]);
+    pmesg_mpz(msg_verbose, "b1", rekey->rekey1[1]);
+    pmesg_mpz(msg_verbose, "rk2_1 (U1)", rekey->rekey2_1);
+    pmesg_hex(msg_verbose, "rk2_2 (U2)", rekey->rekey2_2_size, rekey->rekey2_2);
 
     // mpz_set(elgamal_mod_params->pk, pk->pk1);
 
@@ -270,6 +277,7 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
 
 void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_pk_t pk, anon_proxy_plaintext_t plaintext, anon_proxy_ciphertext_t ciphertext)
 {
+    pmesg(msg_verbose, "--------------------Encryption--------------------");
     // random r, r_1 that are different from 0 and from each other
     mpz_t r, r_1;
     mpz_inits(r, r_1, NULL);
@@ -309,22 +317,6 @@ void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_p
     uint8_t ctr[anon_proxy_ske_block_size];
     memset(ctr, 0, anon_proxy_ske_block_size);
 
-    size_t to_add = anon_proxy_ske_block_size - (plaintext->m_size % anon_proxy_ske_block_size);
-    uint8_t *msg_pad;
-
-    if (to_add == anon_proxy_ske_block_size || true)
-    {
-        pmesg(msg_verbose, "No padding needed");
-        to_add = 0;
-        msg_pad = plaintext->m;
-    }
-    else
-    {
-        pmesg(msg_verbose, "Padding needed");
-        msg_pad = malloc(plaintext->m_size + to_add);
-        memcpy(msg_pad, plaintext->m, plaintext->m_size);
-        memset(msg_pad + plaintext->m_size, 0, to_add);
-    }
     ciphertext->D_size = plaintext->m_size;
     ciphertext->D = malloc(ciphertext->D_size);
 
@@ -334,9 +326,9 @@ void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_p
                                  ctr,
                                  plaintext->m_size,
                                  ciphertext->D,
-                                 msg_pad);
+                                 plaintext->m);
 
-    pmesg_hex(msg_very_verbose, "D", ciphertext->D_size, ciphertext->D);
+    pmesg_hex(msg_verbose, "D", ciphertext->D_size, ciphertext->D);
 
     size_t A_size = mpz_sizeinbase(ciphertext->A, 256);
     size_t B_size = mpz_sizeinbase(ciphertext->B, 256);
@@ -365,87 +357,176 @@ void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_p
     mpz_clears(r, r_1, h3_output, h3_input_mpz, NULL);
 }
 
-void anon_proxy_decrypt(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_ciphertext_t ciphertext, anon_proxy_plaintext_t plaintext, bool original)
+void anon_proxy_decrypt_original(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_ciphertext_t ciphertext, anon_proxy_plaintext_t plaintext)
 {
-    if (original)
-    {
-        size_t A_size = mpz_sizeinbase(ciphertext->A, 256);
-        size_t B_size = mpz_sizeinbase(ciphertext->B, 256);
-        size_t C_size = mpz_sizeinbase(ciphertext->C, 256);
+    pmesg(msg_verbose, "--------------------Decryption--------------------");
+    size_t A_size = mpz_sizeinbase(ciphertext->A, 256);
+    size_t B_size = mpz_sizeinbase(ciphertext->B, 256);
+    size_t C_size = mpz_sizeinbase(ciphertext->C, 256);
 
-        uint8_t h3_input[A_size + B_size + C_size + ciphertext->D_size];
-        mpz_export(h3_input, NULL, 1, 1, 0, 0, ciphertext->A);
-        mpz_export(h3_input + A_size, NULL, 1, 1, 0, 0, ciphertext->B);
-        mpz_export(h3_input + A_size + B_size, NULL, 1, 1, 0, 0, ciphertext->C);
-        memcpy(h3_input + A_size + B_size + C_size, ciphertext->D, ciphertext->D_size);
+    uint8_t h3_input[A_size + B_size + C_size + ciphertext->D_size];
+    mpz_export(h3_input, NULL, 1, 1, 0, 0, ciphertext->A);
+    mpz_export(h3_input + A_size, NULL, 1, 1, 0, 0, ciphertext->B);
+    mpz_export(h3_input + A_size + B_size, NULL, 1, 1, 0, 0, ciphertext->C);
+    memcpy(h3_input + A_size + B_size + C_size, ciphertext->D, ciphertext->D_size);
 
-        mpz_t h3_output;
-        mpz_init(h3_output);
-        mpz_t h3_input_mpz;
-        mpz_init(h3_input_mpz);
-        mpz_import(h3_input_mpz, A_size + B_size + C_size + ciphertext->D_size, 1, 1, 0, 0, h3_input);
+    mpz_t h3_output;
+    mpz_init(h3_output);
+    mpz_t h3_input_mpz;
+    mpz_init(h3_input_mpz);
+    mpz_import(h3_input_mpz, A_size + B_size + C_size + ciphertext->D_size, 1, 1, 0, 0, h3_input);
 
-        anon_proxy_h3(params, h3_input_mpz, h3_output);
+    anon_proxy_h3(params, h3_input_mpz, h3_output);
 
-        mpz_t h3_output_check_1;
-        mpz_init(h3_output_check_1);
-        mpz_powm(h3_output_check_1, ciphertext->A, h3_output, params->p);
-        mpz_mul(h3_output_check_1, h3_output_check_1, ciphertext->C);
-        mpz_mod(h3_output_check_1, h3_output_check_1, params->p);
+    mpz_t h3_output_check_1;
+    mpz_init(h3_output_check_1);
+    mpz_powm(h3_output_check_1, ciphertext->A, h3_output, params->p);
+    mpz_mul(h3_output_check_1, h3_output_check_1, ciphertext->C);
+    mpz_mod(h3_output_check_1, h3_output_check_1, params->p);
 
-        pmesg_mpz(msg_verbose, "h3_output_check_1", h3_output_check_1);
+    pmesg_mpz(msg_very_verbose, "h3_output_check_1", h3_output_check_1);
 
-        mpz_t h3_output_check_2;
-        mpz_init(h3_output_check_2);
-        mpz_powm(h3_output_check_2, params->g, ciphertext->S, params->p);
+    mpz_t h3_output_check_2;
+    mpz_init(h3_output_check_2);
+    mpz_powm(h3_output_check_2, params->g, ciphertext->S, params->p);
 
-        assert(mpz_cmp(h3_output_check_1, h3_output_check_2) == 0);
-        pmesg(msg_very_verbose, "h3_output_check_1 == h3_output_check_2");
+    assert(mpz_cmp(h3_output_check_1, h3_output_check_2) == 0);
+    pmesg(msg_very_verbose, "h3_output_check_1 == h3_output_check_2");
 
-        mpz_t h4_0, h4_1;
-        mpz_inits(h4_0, h4_1, NULL);
+    mpz_t h4_0, h4_1;
+    mpz_inits(h4_0, h4_1, NULL);
 
-        size_t sk_size = mpz_sizeinbase(sk->sk, 256);
-        uint8_t sk_0[sk_size + 1];
-        uint8_t sk_1[sk_size + 1];
-        mpz_export(sk_0, NULL, 1, 1, 0, 0, sk->sk);
-        mpz_export(sk_1, NULL, 1, 1, 0, 0, sk->sk);
-        sk_0[sk_size] = 0;
-        sk_1[sk_size] = 1;
+    size_t sk_size = mpz_sizeinbase(sk->sk, 256);
+    uint8_t sk_0[sk_size + 1];
+    uint8_t sk_1[sk_size + 1];
+    mpz_export(sk_0, NULL, 1, 1, 0, 0, sk->sk);
+    mpz_export(sk_1, NULL, 1, 1, 0, 0, sk->sk);
+    sk_0[sk_size] = 0;
+    sk_1[sk_size] = 1;
 
-        anon_proxy_h4(params, sk_0, sk_size + 1, h4_0);
-        anon_proxy_h4(params, sk_1, sk_size + 1, h4_1);
+    anon_proxy_h4(params, sk_0, sk_size + 1, h4_0);
+    anon_proxy_h4(params, sk_1, sk_size + 1, h4_1);
 
-        mpz_t a_pow, b_pow, h2_input;
-        mpz_inits(a_pow, b_pow, NULL);
-        mpz_powm(a_pow, ciphertext->A, h4_0, params->p);
-        mpz_powm(b_pow, ciphertext->B, h4_1, params->p);
-        mpz_mul(h2_input, a_pow, b_pow);
-        mpz_mod(h2_input, h2_input, params->p);
+    mpz_t a_pow, b_pow, h2_input;
+    mpz_inits(a_pow, b_pow, NULL);
+    mpz_powm(a_pow, ciphertext->A, h4_0, params->p);
+    mpz_powm(b_pow, ciphertext->B, h4_1, params->p);
+    mpz_mul(h2_input, a_pow, b_pow);
+    mpz_mod(h2_input, h2_input, params->p);
 
-        uint8_t h2_output[anon_proxy_ske_key_size];
-        memset(h2_output, 0, anon_proxy_ske_key_size);
-        anon_proxy_h2(params, h2_input, h2_output);
-        pmesg_hex(msg_verbose, "key", anon_proxy_ske_key_size, h2_output);
+    uint8_t h2_output[anon_proxy_ske_key_size];
+    memset(h2_output, 0, anon_proxy_ske_key_size);
+    anon_proxy_h2(params, h2_input, h2_output);
+    pmesg_hex(msg_very_verbose, "key", anon_proxy_ske_key_size, h2_output);
 
-        struct anon_proxy_ske_ctx ctx;
-        anon_proxy_ske_set_decrypt_key(&(ctx), h2_output);
-        uint8_t ctr[anon_proxy_ske_block_size];
-        memset(ctr, 0, anon_proxy_ske_block_size);
-        plaintext->m_size = ciphertext->D_size;
-        plaintext->m = malloc(plaintext->m_size);
+    struct anon_proxy_ske_ctx ctx;
+    anon_proxy_ske_set_decrypt_key(&(ctx), h2_output);
+    uint8_t ctr[anon_proxy_ske_block_size];
+    memset(ctr, 0, anon_proxy_ske_block_size);
+    plaintext->m_size = ciphertext->D_size;
+    plaintext->m = malloc(plaintext->m_size);
 
-        anon_proxy_ske_block_decrypt(&(ctx),
-                                     (nettle_cipher_func *)anon_proxy_ske_decrypt,
-                                     anon_proxy_ske_block_size,
-                                     ctr,
-                                     ciphertext->D_size,
-                                     plaintext->m,
-                                     ciphertext->D);
+    anon_proxy_ske_block_decrypt(&(ctx),
+                                 (nettle_cipher_func *)anon_proxy_ske_decrypt,
+                                 anon_proxy_ske_block_size,
+                                 ctr,
+                                 ciphertext->D_size,
+                                 plaintext->m,
+                                 ciphertext->D);
 
-        pmesg_hex(msg_verbose, "m", plaintext->m_size, plaintext->m);
-    }
-    else
-    {
-    }
+    pmesg_hex(msg_verbose, "decrypted", plaintext->m_size, plaintext->m);
+}
+
+void anon_proxy_reencrypt(anon_proxy_params_t params, anon_proxy_rekey_t rekey, anon_proxy_ciphertext_t ciphertext, anon_proxy_reencrypted_ciphertext_t reencrypted_ciphertext)
+{
+    pmesg(msg_verbose, "-------------------Reencryption-------------------");
+    size_t A_size = mpz_sizeinbase(ciphertext->A, 256);
+    size_t B_size = mpz_sizeinbase(ciphertext->B, 256);
+    size_t C_size = mpz_sizeinbase(ciphertext->C, 256);
+
+    uint8_t h3_input[A_size + B_size + C_size + ciphertext->D_size];
+    mpz_export(h3_input, NULL, 1, 1, 0, 0, ciphertext->A);
+    mpz_export(h3_input + A_size, NULL, 1, 1, 0, 0, ciphertext->B);
+    mpz_export(h3_input + A_size + B_size, NULL, 1, 1, 0, 0, ciphertext->C);
+    memcpy(h3_input + A_size + B_size + C_size, ciphertext->D, ciphertext->D_size);
+
+    mpz_t h3_output;
+    mpz_init(h3_output);
+    mpz_t h3_input_mpz;
+    mpz_init(h3_input_mpz);
+    mpz_import(h3_input_mpz, A_size + B_size + C_size + ciphertext->D_size, 1, 1, 0, 0, h3_input);
+
+    anon_proxy_h3(params, h3_input_mpz, h3_output);
+
+    mpz_t h3_output_check_1;
+    mpz_init(h3_output_check_1);
+    mpz_powm(h3_output_check_1, ciphertext->A, h3_output, params->p);
+    mpz_mul(h3_output_check_1, h3_output_check_1, ciphertext->C);
+    mpz_mod(h3_output_check_1, h3_output_check_1, params->p);
+
+    pmesg_mpz(msg_very_verbose, "h3_output_check_1", h3_output_check_1);
+
+    mpz_t h3_output_check_2;
+    mpz_init(h3_output_check_2);
+    mpz_powm(h3_output_check_2, params->g, ciphertext->S, params->p);
+
+    assert(mpz_cmp(h3_output_check_1, h3_output_check_2) == 0);
+    pmesg(msg_very_verbose, "h3_output_check_1 == h3_output_check_2");
+
+    mpz_t A_1, B_1;
+    mpz_inits(A_1, B_1, NULL);
+    mpz_powm(A_1, ciphertext->A, rekey->rekey1[0], params->p);
+    mpz_powm(B_1, ciphertext->B, rekey->rekey1[1], params->p);
+
+    mpz_init_set(reencrypted_ciphertext->A_1, A_1);
+    mpz_init_set(reencrypted_ciphertext->B_1, B_1);
+    reencrypted_ciphertext->D_size = ciphertext->D_size;
+    reencrypted_ciphertext->D = malloc(reencrypted_ciphertext->D_size);
+    memcpy(reencrypted_ciphertext->D, ciphertext->D, reencrypted_ciphertext->D_size);
+    mpz_init_set(reencrypted_ciphertext->U1, rekey->rekey2_1);
+    reencrypted_ciphertext->U2_size = rekey->rekey2_2_size;
+    reencrypted_ciphertext->U2 = malloc(reencrypted_ciphertext->U2_size);
+    memcpy(reencrypted_ciphertext->U2, rekey->rekey2_2, reencrypted_ciphertext->U2_size);
+
+    // TODO: CLEAR MPZs
+    // TODO: PMESG
+}
+
+void anon_proxy_decrypt_reencrypted(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_reencrypted_ciphertext_t reencrypted_ciphertext, anon_proxy_plaintext_t plaintext)
+{
+    pmesg(msg_verbose, "----------------Decrypt Reencrypted---------------");
+    mpz_t h2_input;
+    mpz_init(h2_input);
+    mpz_powm(h2_input, reencrypted_ciphertext->U1, sk->sk, params->p);
+
+    uint8_t h2_output[anon_proxy_ske_key_size];
+    memset(h2_output, 0, anon_proxy_ske_key_size);
+    anon_proxy_h2(params, h2_input, h2_output);
+
+    uint8_t r_a2_b2[reencrypted_ciphertext->U2_size];
+    memset(r_a2_b2, 0, reencrypted_ciphertext->U2_size);
+
+    struct anon_proxy_ske_ctx ctx;
+    uint8_t ctr[anon_proxy_ske_block_size];
+    memset(ctr, 0, anon_proxy_ske_block_size);
+
+    anon_proxy_ske_set_decrypt_key(&(ctx), h2_output);
+    anon_proxy_ske_block_decrypt(&(ctx),
+                                 (nettle_cipher_func *)anon_proxy_ske_decrypt,
+                                 anon_proxy_ske_block_size,
+                                 ctr,
+                                 reencrypted_ciphertext->U2_size,
+                                 r_a2_b2,
+                                 reencrypted_ciphertext->U2);
+
+    mpz_t h1_output;
+    mpz_init(h1_output);
+
+    anon_proxy_h1(params, r_a2_b2, reencrypted_ciphertext->U2_size, h1_output);
+    
+    mpz_t h1_output_check;
+    mpz_init(h1_output_check);
+    mpz_powm(h1_output_check, params->g, h1_output, params->p);
+
+    assert(mpz_cmp(h1_output_check, reencrypted_ciphertext->U1) == 0);
 }
