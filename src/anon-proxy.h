@@ -120,4 +120,6 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
 
 void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_pk_t pk, anon_proxy_plaintext_t plaintext, anon_proxy_ciphertext_t ciphertext);
 
+void anon_proxy_decrypt(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_ciphertext_t ciphertext, anon_proxy_plaintext_t plaintext, bool original);
+
 #endif // ANON_PROXY_H
