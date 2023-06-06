@@ -39,7 +39,7 @@ typedef enum
     msg_very_verbose
 } msg_level_t;
 
-#define pmesg_mpz_shortening_threshold 22
+#define pmesg_mpz_shortening_threshold 161
 #define pmesg_mpz_shortening_prefix_suffix_length 10
 #define pmesg_mpz_default_base 10
 #define pmesg_io_channel stdout
