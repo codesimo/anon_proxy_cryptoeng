@@ -130,32 +130,31 @@ void anon_proxy_init(anon_proxy_params_t params,
 
 void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk)
 {
-    mpz_init(sk->sk);
-    mpz_init(pk->pk1);
-    mpz_init(pk->pk2);
+    mpz_inits(sk->sk, pk->pk1, pk->pk2, NULL);
+
     mpz_urandomm(sk->sk, prng, params->q);
     mpz_powm(pk->pk1, params->g, sk->sk, params->p);
 
     size_t sk_size = mpz_sizeinbase(sk->sk, 256);
 
-    uint8_t sk_0[sk_size + 1];
-    uint8_t sk_1[sk_size + 1];
-    mpz_export(sk_0, NULL, 1, 1, 0, 0, sk->sk);
-    mpz_export(sk_1, NULL, 1, 1, 0, 0, sk->sk);
-    sk_0[sk_size] = 0;
-    sk_1[sk_size] = 1;
+    uint8_t h4_0[sk_size + 1];
+    uint8_t h4_1[sk_size + 1];
+    mpz_export(h4_0, NULL, 1, 1, 0, 0, sk->sk);
+    mpz_export(h4_1, NULL, 1, 1, 0, 0, sk->sk);
+    h4_0[sk_size] = 0;
+    h4_1[sk_size] = 1;
 
     mpz_t tmp0, tmp1;
     mpz_inits(tmp0, tmp1, NULL);
 
-    anon_proxy_h4(params, sk_0, sk_size + 1, tmp0);
-    anon_proxy_h4(params, sk_1, sk_size + 1, tmp1);
+    anon_proxy_h4(params, h4_0, sk_size + 1, tmp0);
+    anon_proxy_h4(params, h4_1, sk_size + 1, tmp1);
 
     mpz_mul(tmp1, sk->sk, tmp1);
     mpz_add(tmp0, tmp0, tmp1);
     mpz_powm(pk->pk2, params->g, tmp0, params->p);
 
-    pmesg(msg_verbose, "-------------Key generation completed-------------");
+    pmesg(msg_normal, "-------------Key generation completed-------------");
     pmesg_mpz(msg_verbose, "sk", sk->sk);
     pmesg_mpz(msg_verbose, "pk1", pk->pk1);
     pmesg_mpz(msg_verbose, "pk2", pk->pk2);
@@ -166,6 +165,7 @@ void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_pr
 void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, anon_proxy_rekey_t rekey)
 {
     pmesg(msg_verbose, "---------------------Rekeygen---------------------");
+
     mpz_t a1, a2, b1, b2, h4_0, h4_1, tmp;
     mpz_inits(a1, a2, b1, b2, h4_0, h4_1, tmp, NULL);
 
@@ -184,6 +184,8 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
     anon_proxy_h4(params, sk_0, sk_size + 1, h4_0);
     anon_proxy_h4(params, sk_1, sk_size + 1, h4_1);
 
+    // Generate A1 * A2 and B1 * B2
+
     mpz_mod(h4_0, h4_0, params->q);
     mpz_mod(h4_1, h4_1, params->q);
 
@@ -193,20 +195,17 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
         mpz_urandomm(a2, prng, params->q);
     } while (mpz_sizeinbase(a2, 2) != params->q_bits || mpz_cmp_ui(a2, 0) == 0);
 
+    mpz_invert(a1, a2, params->q);
 
-    mpz_t a2_inv;
-    mpz_init(a2_inv);
-    mpz_invert(a2_inv, a2, params->q);
-
-    mpz_mul(a1, a2_inv, h4_0);
+    mpz_mul(a1, a1, h4_0);
     mpz_mod(a1, a1, params->q);
 
-    mpz_t test1;
-    mpz_init(test1);
-    mpz_mul(test1, a1, a2);
+    mpz_t test;
+    mpz_init(test);
+    mpz_mul(test, a1, a2);
 
-    mpz_mod(test1, test1, params->q);
-    assert(mpz_cmp(test1, h4_0) == 0);
+    mpz_mod(test, test, params->q);
+    assert(mpz_cmp(test, h4_0) == 0);
 
     // B1 and B2
     do
@@ -214,11 +213,21 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
         mpz_urandomm(b2, prng, params->q);
     } while (mpz_sizeinbase(b2, 2) != params->q_bits || mpz_cmp_ui(b2, 0) == 0);
 
-    mpz_t b2_inv;
-    mpz_init(b2_inv);
-    mpz_invert(b2_inv, b2, params->q);
-    mpz_mul(b1, b2_inv, h4_1);
+    mpz_invert(b1, b2, params->q);
+    mpz_mul(b1, b1, h4_1);
     mpz_mod(b1, b1, params->q);
+
+    mpz_mul(test, b1, b2);
+    mpz_mod(test, test, params->q);
+    assert(mpz_cmp(test, h4_1) == 0);
+
+    mpz_clear(test);
+
+    pmesg_mpz(msg_verbose, "a1", rekey->rekey1[0]);
+    pmesg_mpz(msg_verbose, "b1", rekey->rekey1[1]);
+
+    pmesg_mpz(msg_normal, "a2", a2);
+    pmesg_mpz(msg_normal, "b2", b2);
 
     // random r
     mpz_t r;
@@ -227,6 +236,7 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
     {
         mpz_urandomm(r, prng, params->q);
     } while (mpz_sizeinbase(r, 2) != params->q_bits || mpz_cmp_ui(r, 0) == 0);
+
     pmesg_mpz(msg_very_verbose, "r", r);
 
     size_t r_size = mpz_sizeinbase(r, 256);
@@ -235,6 +245,7 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
 
     // r||a2||b2
     size_t r_a2_b2_size = r_size + a2_size + b2_size;
+
     uint8_t r_a2_b2[r_a2_b2_size];
     memset(r_a2_b2, 0, r_a2_b2_size);
 
@@ -286,18 +297,10 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
                                  rekey->rekey2_2,
                                  r_a2_b2);
 
-    pmesg_mpz(msg_verbose, "a1", rekey->rekey1[0]);
-    pmesg_mpz(msg_verbose, "b1", rekey->rekey1[1]);
-
-    pmesg_mpz(msg_normal, "a2", a2);
-    pmesg_mpz(msg_normal, "b2", b2);
-
     pmesg_mpz(msg_verbose, "rk2_1 (U1)", rekey->rekey2_1);
     pmesg_hex(msg_verbose, "rk2_2 (U2)", rekey->rekey2_2_size, rekey->rekey2_2);
     mpz_clears(h4_0, h4_1, NULL);
     mpz_clears(a1, a2, b1, b2, tmp, r, h1_output, NULL);
-
-    mpz_clears(a2_inv, b2_inv, NULL);
 }
 
 void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_pk_t pk, anon_proxy_plaintext_t plaintext, anon_proxy_ciphertext_t ciphertext)
@@ -521,7 +524,7 @@ void anon_proxy_reencrypt(anon_proxy_params_t params, anon_proxy_rekey_t rekey, 
     // TODO: CLEAR MPZs
     mpz_clears(h3_output, h3_input_mpz, A_1, B_1, NULL);
     mpz_clears(h3_output_check_1, h3_output_check_2, NULL);
-    
+
     // TODO: PMESG
     pmesg_mpz(msg_verbose, "A_1", reencrypted_ciphertext->A_1);
     pmesg_mpz(msg_verbose, "B_1", reencrypted_ciphertext->B_1);
