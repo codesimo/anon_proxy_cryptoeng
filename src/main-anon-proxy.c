@@ -17,13 +17,16 @@ int main()
     anon_proxy_keygen(params, prng, sk_1, pk_1);
 
     anon_proxy_plaintext_t plaintext;
-    plaintext->m_size = 20;
+    plaintext->m_size = 16;
     plaintext->m = malloc(plaintext->m_size);
     memset(plaintext->m, 0, plaintext->m_size);
-    for (size_t i = 0; i < plaintext->m_size; i++)
+
+    size_t i = 0;
+    for (i = 0; i < plaintext->m_size; i++)
     {
         plaintext->m[i] = i % 256;
     }
+    
     pmesg_hex(msg_normal, "plaintext", plaintext->m_size, plaintext->m);
     anon_proxy_ciphertext_t ciphertext;
 
@@ -54,6 +57,8 @@ int main()
     pmesg(msg_normal, "--------------------------------------------------");
 
     anon_proxy_decrypt_reencrypted(params, sk_2, reencrypted_ciphertext, plaintext3);
+    assert(plaintext->m_size == plaintext3->m_size);
+    assert(memcmp(plaintext->m, plaintext3->m, plaintext->m_size) == 0);
     pmesg(msg_verbose, "--------------------------------------------------");
     pmesg(msg_verbose, "         Reencryption and redecryption: OK!       ");
     pmesg(msg_verbose, "--------------------------------------------------");
