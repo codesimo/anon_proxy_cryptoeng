@@ -4,7 +4,7 @@
 
 int main()
 {
-    set_messaging_level(msg_normal);
+    set_messaging_level(msg_very_verbose);
     anon_proxy_params_t params;
     gmp_randstate_t prng;
     gmp_randinit_default(prng);
@@ -26,7 +26,7 @@ int main()
     {
         plaintext->m[i] = i % 256;
     }
-    
+
     pmesg_hex(msg_normal, "plaintext", plaintext->m_size, plaintext->m);
     anon_proxy_ciphertext_t ciphertext;
 
