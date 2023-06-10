@@ -4,7 +4,7 @@
 
 int main()
 {
-    set_messaging_level(msg_very_verbose);
+    set_messaging_level(msg_normal);
     anon_proxy_params_t params;
     gmp_randstate_t prng;
     gmp_randinit_default(prng);
@@ -27,6 +27,7 @@ int main()
         plaintext->m[i] = i % 256;
     }
 
+    pmesg(msg_normal, "\n--------------------------------------------------");
     pmesg_hex(msg_normal, "plaintext", plaintext->m_size, plaintext->m);
     anon_proxy_ciphertext_t ciphertext;
 
@@ -38,9 +39,6 @@ int main()
     assert(plaintext->m_size == plaintext2->m_size);
     assert(memcmp(plaintext->m, plaintext2->m, plaintext->m_size) == 0);
 
-    pmesg(msg_verbose, "--------------------------------------------------");
-    pmesg(msg_verbose, "          Encryption and decryption: OK!          ");
-    pmesg(msg_verbose, "--------------------------------------------------");
 
     anon_proxy_sk_t sk_2;
     anon_proxy_pk_t pk_2;
@@ -54,13 +52,9 @@ int main()
 
     anon_proxy_plaintext_t plaintext3;
 
-    pmesg(msg_normal, "--------------------------------------------------");
-
     anon_proxy_decrypt_reencrypted(params, sk_2, reencrypted_ciphertext, plaintext3);
     assert(plaintext->m_size == plaintext3->m_size);
     assert(memcmp(plaintext->m, plaintext3->m, plaintext->m_size) == 0);
-    pmesg(msg_verbose, "--------------------------------------------------");
-    pmesg(msg_verbose, "         Reencryption and redecryption: OK!       ");
-    pmesg(msg_verbose, "--------------------------------------------------");
+
     return 0;
 }

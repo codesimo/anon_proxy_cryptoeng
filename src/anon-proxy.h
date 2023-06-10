@@ -124,9 +124,11 @@ void anon_proxy_h3(anon_proxy_params_t params, mpz_t input, mpz_t output);
 
 void anon_proxy_h4(anon_proxy_params_t params, uint8_t *input, size_t input_size, mpz_t output);
 
+void anon_proxy_create_h3_ABCD(anon_proxy_params_t params, mpz_t A, mpz_t B, mpz_t C, uint8_t *D, size_t D_size, mpz_t output);
+void anon_proxy_keygen_step1(mpz_t x, anon_proxy_params_t params, gmp_randstate_t prng, mpz_t num1, mpz_t num2, size_t h4_n);
+
 void anon_proxy_init(anon_proxy_params_t params,
                      gmp_randstate_t prng, anon_proxy_lambda lambda);
-void anon_proxy_keygen_step1(mpz_t x, anon_proxy_params_t params, gmp_randstate_t prng, mpz_t num1, mpz_t num2, size_t h4_n);
 
 void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk);
 
