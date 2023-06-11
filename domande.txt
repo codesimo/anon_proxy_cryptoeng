@@ -1,9 +1,0 @@
-1. One time symmetric key encryption?
-2. H1 == H4? Nell'input inserire un pezzo casuale
-
-3. H2 e H3 dominio?
-4. Cos'è l? In relazione ad SKE (Elgamal-mod)
-5. pubkey di Elgamal-mod? Perchè sono due?
-6. Enc prende messaggi {0,1}^n. Che è n???
-7. E cos'è l?
-8. In generale, a cosa serve sto algo?
