@@ -124,6 +124,17 @@ void anon_proxy_h3(anon_proxy_params_t params, mpz_t input, mpz_t output);
 
 void anon_proxy_h4(anon_proxy_params_t params, uint8_t *input, size_t input_size, mpz_t output);
 
+void anon_proxy_plaintext_clear(anon_proxy_plaintext_t plaintext);
+void anon_proxy_ciphertext_clear(anon_proxy_ciphertext_t ciphertext);
+void anon_proxy_reencrypted_ciphertext_clear(anon_proxy_reencrypted_ciphertext_t ciphertext);
+void anon_proxy_pk_clear(anon_proxy_pk_t pk);
+void anon_proxy_sk_clear(anon_proxy_sk_t sk);
+void anon_proxy_rekey_clear(anon_proxy_rekey_t rekey);
+void anon_proxy_params_clear(anon_proxy_params_t params);
+
+void anon_proxy_plaintext_init_manual(anon_proxy_plaintext_t plaintext, uint8_t *m, size_t m_size);
+void anon_proxy_plaintext_init_random(gmp_randstate_t prng, anon_proxy_plaintext_t plaintext, size_t m_size);
+
 void anon_proxy_create_h3_ABCD(anon_proxy_params_t params, mpz_t A, mpz_t B, mpz_t C, uint8_t *D, size_t D_size, mpz_t output);
 void anon_proxy_keygen_step1(mpz_t x, anon_proxy_params_t params, gmp_randstate_t prng, mpz_t num1, mpz_t num2, size_t h4_n);
 

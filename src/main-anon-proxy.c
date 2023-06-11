@@ -17,15 +17,7 @@ int main()
     anon_proxy_keygen(params, prng, sk_1, pk_1);
 
     anon_proxy_plaintext_t plaintext;
-    plaintext->m_size = 16;
-    plaintext->m = malloc(plaintext->m_size);
-    memset(plaintext->m, 0, plaintext->m_size);
-
-    size_t i = 0;
-    for (i = 0; i < plaintext->m_size; i++)
-    {
-        plaintext->m[i] = i % 256;
-    }
+    anon_proxy_plaintext_init_random(prng, plaintext, 16);
 
     pmesg(msg_normal, "\n--------------------------------------------------");
     pmesg_hex(msg_normal, "plaintext", plaintext->m_size, plaintext->m);
@@ -38,7 +30,6 @@ int main()
 
     assert(plaintext->m_size == plaintext2->m_size);
     assert(memcmp(plaintext->m, plaintext2->m, plaintext->m_size) == 0);
-
 
     anon_proxy_sk_t sk_2;
     anon_proxy_pk_t pk_2;

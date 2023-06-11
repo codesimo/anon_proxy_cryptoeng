@@ -62,6 +62,67 @@ void anon_proxy_h4(anon_proxy_params_t params,
         mpz_set_ui(output, 1);
 }
 
+void anon_proxy_plaintext_clear(anon_proxy_plaintext_t plaintext)
+{
+    free(plaintext->m);
+    plaintext->m = NULL;
+    plaintext->m_size = 0;
+}
+void anon_proxy_ciphertext_clear(anon_proxy_ciphertext_t ciphertext)
+{
+    mpz_clears(ciphertext->A, ciphertext->B, ciphertext->C, ciphertext->S, NULL);
+
+    free(ciphertext->D);
+    ciphertext->D = NULL;
+    ciphertext->D_size = 0;
+}
+void anon_proxy_reencrypted_ciphertext_clear(anon_proxy_reencrypted_ciphertext_t ciphertext)
+{
+    mpz_clears(ciphertext->A_1, ciphertext->B_1, ciphertext->U1, NULL);
+
+    free(ciphertext->D);
+    ciphertext->D = NULL;
+    ciphertext->D_size = 0;
+
+    free(ciphertext->U2);
+    ciphertext->U2 = NULL;
+    ciphertext->U2_size = 0;
+}
+
+void anon_proxy_pk_clear(anon_proxy_pk_t pk)
+{
+    mpz_clears(pk->pk1, pk->pk2, NULL);
+}
+void anon_proxy_sk_clear(anon_proxy_sk_t sk)
+{
+    mpz_clear(sk->sk);
+}
+void anon_proxy_rekey_clear(anon_proxy_rekey_t rekey)
+{
+    mpz_clears(rekey->rekey1[0], rekey->rekey1[1], rekey->rekey2_1, NULL);
+
+    free(rekey->rekey2_2);
+    rekey->rekey2_2 = NULL;
+    rekey->rekey2_2_size = 0;
+}
+void anon_proxy_params_clear(anon_proxy_params_t params)
+{
+    mpz_clears(params->p, params->q, params->g, NULL);
+}
+void anon_proxy_plaintext_init_manual(anon_proxy_plaintext_t plaintext, uint8_t *m, size_t m_size)
+{
+    plaintext->m = malloc(m_size);
+    memcpy(plaintext->m, m, m_size);
+    plaintext->m_size = m_size;
+}
+void anon_proxy_plaintext_init_random(gmp_randstate_t prng, anon_proxy_plaintext_t plaintext, size_t m_size)
+{
+    plaintext->m = malloc(m_size);
+    for (size_t i = 0; i < m_size; i++)
+        plaintext->m[i] = gmp_urandomm_ui(prng, 256);
+    plaintext->m_size = m_size;
+}
+
 void anon_proxy_init(anon_proxy_params_t params,
                      gmp_randstate_t prng, anon_proxy_lambda lambda)
 {
@@ -495,6 +556,7 @@ void anon_proxy_decrypt_reencrypted(anon_proxy_params_t params, anon_proxy_sk_t 
     memset(ctr, 0, anon_proxy_ske_block_size);
 
     anon_proxy_ske_set_decrypt_key(&(ctx), h2_output);
+
     anon_proxy_ske_block_decrypt(&(ctx),
                                  (nettle_cipher_func *)anon_proxy_ske_decrypt,
                                  anon_proxy_ske_block_size,
