@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**",
                 "/usr/include/x86_64-linux-gnu",
                 "/usr/include",
-                "${workspaceFolder}/libs"
+                "${workspaceFolder}/libs-mdr"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

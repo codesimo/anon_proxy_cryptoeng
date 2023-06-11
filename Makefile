@@ -194,197 +194,197 @@ main-anon-proxy/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/build
 .PHONY : main-anon-proxy/fast
 
-libs/lib-mesg.o: libs/lib-mesg.c.o
-.PHONY : libs/lib-mesg.o
+benchmark/bench-elgamal-mod.o: benchmark/bench-elgamal-mod.c.o
+.PHONY : benchmark/bench-elgamal-mod.o
 
 # target to build an object file
-libs/lib-mesg.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-mesg.c.o
-.PHONY : libs/lib-mesg.c.o
+benchmark/bench-elgamal-mod.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/benchmark/bench-elgamal-mod.c.o
+.PHONY : benchmark/bench-elgamal-mod.c.o
 
-libs/lib-mesg.i: libs/lib-mesg.c.i
-.PHONY : libs/lib-mesg.i
+benchmark/bench-elgamal-mod.i: benchmark/bench-elgamal-mod.c.i
+.PHONY : benchmark/bench-elgamal-mod.i
 
 # target to preprocess a source file
-libs/lib-mesg.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-mesg.c.i
-.PHONY : libs/lib-mesg.c.i
+benchmark/bench-elgamal-mod.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/benchmark/bench-elgamal-mod.c.i
+.PHONY : benchmark/bench-elgamal-mod.c.i
 
-libs/lib-mesg.s: libs/lib-mesg.c.s
-.PHONY : libs/lib-mesg.s
+benchmark/bench-elgamal-mod.s: benchmark/bench-elgamal-mod.c.s
+.PHONY : benchmark/bench-elgamal-mod.s
 
 # target to generate assembly for a file
-libs/lib-mesg.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-mesg.c.s
-.PHONY : libs/lib-mesg.c.s
+benchmark/bench-elgamal-mod.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/benchmark/bench-elgamal-mod.c.s
+.PHONY : benchmark/bench-elgamal-mod.c.s
 
-libs/lib-misc.o: libs/lib-misc.c.o
-.PHONY : libs/lib-misc.o
+examples/main-anon-proxy.o: examples/main-anon-proxy.c.o
+.PHONY : examples/main-anon-proxy.o
 
 # target to build an object file
-libs/lib-misc.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-misc.c.o
-.PHONY : libs/lib-misc.c.o
+examples/main-anon-proxy.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/examples/main-anon-proxy.c.o
+.PHONY : examples/main-anon-proxy.c.o
 
-libs/lib-misc.i: libs/lib-misc.c.i
-.PHONY : libs/lib-misc.i
+examples/main-anon-proxy.i: examples/main-anon-proxy.c.i
+.PHONY : examples/main-anon-proxy.i
 
 # target to preprocess a source file
-libs/lib-misc.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-misc.c.i
-.PHONY : libs/lib-misc.c.i
+examples/main-anon-proxy.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/examples/main-anon-proxy.c.i
+.PHONY : examples/main-anon-proxy.c.i
 
-libs/lib-misc.s: libs/lib-misc.c.s
-.PHONY : libs/lib-misc.s
+examples/main-anon-proxy.s: examples/main-anon-proxy.c.s
+.PHONY : examples/main-anon-proxy.s
 
 # target to generate assembly for a file
-libs/lib-misc.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-misc.c.s
-.PHONY : libs/lib-misc.c.s
+examples/main-anon-proxy.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/examples/main-anon-proxy.c.s
+.PHONY : examples/main-anon-proxy.c.s
 
-libs/lib-timing.o: libs/lib-timing.c.o
-.PHONY : libs/lib-timing.o
+examples/main-elgamal-mod.o: examples/main-elgamal-mod.c.o
+.PHONY : examples/main-elgamal-mod.o
 
 # target to build an object file
-libs/lib-timing.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-timing.c.o
-.PHONY : libs/lib-timing.c.o
+examples/main-elgamal-mod.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/examples/main-elgamal-mod.c.o
+.PHONY : examples/main-elgamal-mod.c.o
 
-libs/lib-timing.i: libs/lib-timing.c.i
-.PHONY : libs/lib-timing.i
+examples/main-elgamal-mod.i: examples/main-elgamal-mod.c.i
+.PHONY : examples/main-elgamal-mod.i
 
 # target to preprocess a source file
-libs/lib-timing.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-timing.c.i
-.PHONY : libs/lib-timing.c.i
+examples/main-elgamal-mod.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/examples/main-elgamal-mod.c.i
+.PHONY : examples/main-elgamal-mod.c.i
 
-libs/lib-timing.s: libs/lib-timing.c.s
-.PHONY : libs/lib-timing.s
+examples/main-elgamal-mod.s: examples/main-elgamal-mod.c.s
+.PHONY : examples/main-elgamal-mod.s
 
 # target to generate assembly for a file
-libs/lib-timing.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs/lib-timing.c.s
-.PHONY : libs/lib-timing.c.s
+examples/main-elgamal-mod.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/examples/main-elgamal-mod.c.s
+.PHONY : examples/main-elgamal-mod.c.s
 
-src/anon-proxy.o: src/anon-proxy.c.o
-.PHONY : src/anon-proxy.o
+libs-mdr/lib-mesg.o: libs-mdr/lib-mesg.c.o
+.PHONY : libs-mdr/lib-mesg.o
 
 # target to build an object file
-src/anon-proxy.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.o
-.PHONY : src/anon-proxy.c.o
+libs-mdr/lib-mesg.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-mesg.c.o
+.PHONY : libs-mdr/lib-mesg.c.o
 
-src/anon-proxy.i: src/anon-proxy.c.i
-.PHONY : src/anon-proxy.i
+libs-mdr/lib-mesg.i: libs-mdr/lib-mesg.c.i
+.PHONY : libs-mdr/lib-mesg.i
 
 # target to preprocess a source file
-src/anon-proxy.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.i
-.PHONY : src/anon-proxy.c.i
+libs-mdr/lib-mesg.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-mesg.c.i
+.PHONY : libs-mdr/lib-mesg.c.i
 
-src/anon-proxy.s: src/anon-proxy.c.s
-.PHONY : src/anon-proxy.s
+libs-mdr/lib-mesg.s: libs-mdr/lib-mesg.c.s
+.PHONY : libs-mdr/lib-mesg.s
 
 # target to generate assembly for a file
-src/anon-proxy.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/anon-proxy.c.s
-.PHONY : src/anon-proxy.c.s
+libs-mdr/lib-mesg.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-mesg.c.s
+.PHONY : libs-mdr/lib-mesg.c.s
 
-src/bench-elgamal-mod.o: src/bench-elgamal-mod.c.o
-.PHONY : src/bench-elgamal-mod.o
+libs-mdr/lib-misc.o: libs-mdr/lib-misc.c.o
+.PHONY : libs-mdr/lib-misc.o
 
 # target to build an object file
-src/bench-elgamal-mod.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/src/bench-elgamal-mod.c.o
-.PHONY : src/bench-elgamal-mod.c.o
+libs-mdr/lib-misc.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-misc.c.o
+.PHONY : libs-mdr/lib-misc.c.o
 
-src/bench-elgamal-mod.i: src/bench-elgamal-mod.c.i
-.PHONY : src/bench-elgamal-mod.i
+libs-mdr/lib-misc.i: libs-mdr/lib-misc.c.i
+.PHONY : libs-mdr/lib-misc.i
 
 # target to preprocess a source file
-src/bench-elgamal-mod.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/src/bench-elgamal-mod.c.i
-.PHONY : src/bench-elgamal-mod.c.i
+libs-mdr/lib-misc.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-misc.c.i
+.PHONY : libs-mdr/lib-misc.c.i
 
-src/bench-elgamal-mod.s: src/bench-elgamal-mod.c.s
-.PHONY : src/bench-elgamal-mod.s
+libs-mdr/lib-misc.s: libs-mdr/lib-misc.c.s
+.PHONY : libs-mdr/lib-misc.s
 
 # target to generate assembly for a file
-src/bench-elgamal-mod.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/src/bench-elgamal-mod.c.s
-.PHONY : src/bench-elgamal-mod.c.s
+libs-mdr/lib-misc.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-misc.c.s
+.PHONY : libs-mdr/lib-misc.c.s
 
-src/elgamal-mod.o: src/elgamal-mod.c.o
-.PHONY : src/elgamal-mod.o
+libs-mdr/lib-timing.o: libs-mdr/lib-timing.c.o
+.PHONY : libs-mdr/lib-timing.o
 
 # target to build an object file
-src/elgamal-mod.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/elgamal-mod.c.o
-.PHONY : src/elgamal-mod.c.o
+libs-mdr/lib-timing.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-timing.c.o
+.PHONY : libs-mdr/lib-timing.c.o
 
-src/elgamal-mod.i: src/elgamal-mod.c.i
-.PHONY : src/elgamal-mod.i
+libs-mdr/lib-timing.i: libs-mdr/lib-timing.c.i
+.PHONY : libs-mdr/lib-timing.i
 
 # target to preprocess a source file
-src/elgamal-mod.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/elgamal-mod.c.i
-.PHONY : src/elgamal-mod.c.i
+libs-mdr/lib-timing.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-timing.c.i
+.PHONY : libs-mdr/lib-timing.c.i
 
-src/elgamal-mod.s: src/elgamal-mod.c.s
-.PHONY : src/elgamal-mod.s
+libs-mdr/lib-timing.s: libs-mdr/lib-timing.c.s
+.PHONY : libs-mdr/lib-timing.s
 
 # target to generate assembly for a file
-src/elgamal-mod.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/elgamal-mod.c.s
-.PHONY : src/elgamal-mod.c.s
+libs-mdr/lib-timing.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-timing.c.s
+.PHONY : libs-mdr/lib-timing.c.s
 
-src/main-anon-proxy.o: src/main-anon-proxy.c.o
-.PHONY : src/main-anon-proxy.o
+src/lib-anon-proxy.o: src/lib-anon-proxy.c.o
+.PHONY : src/lib-anon-proxy.o
 
 # target to build an object file
-src/main-anon-proxy.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/src/main-anon-proxy.c.o
-.PHONY : src/main-anon-proxy.c.o
+src/lib-anon-proxy.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/lib-anon-proxy.c.o
+.PHONY : src/lib-anon-proxy.c.o
 
-src/main-anon-proxy.i: src/main-anon-proxy.c.i
-.PHONY : src/main-anon-proxy.i
+src/lib-anon-proxy.i: src/lib-anon-proxy.c.i
+.PHONY : src/lib-anon-proxy.i
 
 # target to preprocess a source file
-src/main-anon-proxy.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/src/main-anon-proxy.c.i
-.PHONY : src/main-anon-proxy.c.i
+src/lib-anon-proxy.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/lib-anon-proxy.c.i
+.PHONY : src/lib-anon-proxy.c.i
 
-src/main-anon-proxy.s: src/main-anon-proxy.c.s
-.PHONY : src/main-anon-proxy.s
+src/lib-anon-proxy.s: src/lib-anon-proxy.c.s
+.PHONY : src/lib-anon-proxy.s
 
 # target to generate assembly for a file
-src/main-anon-proxy.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/src/main-anon-proxy.c.s
-.PHONY : src/main-anon-proxy.c.s
+src/lib-anon-proxy.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/anon-proxy.dir/build.make CMakeFiles/anon-proxy.dir/src/lib-anon-proxy.c.s
+.PHONY : src/lib-anon-proxy.c.s
 
-src/main-elgamal-mod.o: src/main-elgamal-mod.c.o
-.PHONY : src/main-elgamal-mod.o
+src/lib-elgamal-mod.o: src/lib-elgamal-mod.c.o
+.PHONY : src/lib-elgamal-mod.o
 
 # target to build an object file
-src/main-elgamal-mod.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/src/main-elgamal-mod.c.o
-.PHONY : src/main-elgamal-mod.c.o
+src/lib-elgamal-mod.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/lib-elgamal-mod.c.o
+.PHONY : src/lib-elgamal-mod.c.o
 
-src/main-elgamal-mod.i: src/main-elgamal-mod.c.i
-.PHONY : src/main-elgamal-mod.i
+src/lib-elgamal-mod.i: src/lib-elgamal-mod.c.i
+.PHONY : src/lib-elgamal-mod.i
 
 # target to preprocess a source file
-src/main-elgamal-mod.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/src/main-elgamal-mod.c.i
-.PHONY : src/main-elgamal-mod.c.i
+src/lib-elgamal-mod.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/lib-elgamal-mod.c.i
+.PHONY : src/lib-elgamal-mod.c.i
 
-src/main-elgamal-mod.s: src/main-elgamal-mod.c.s
-.PHONY : src/main-elgamal-mod.s
+src/lib-elgamal-mod.s: src/lib-elgamal-mod.c.s
+.PHONY : src/lib-elgamal-mod.s
 
 # target to generate assembly for a file
-src/main-elgamal-mod.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-elgamal-mod.dir/build.make CMakeFiles/main-elgamal-mod.dir/src/main-elgamal-mod.c.s
-.PHONY : src/main-elgamal-mod.c.s
+src/lib-elgamal-mod.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/lib-elgamal-mod.c.s
+.PHONY : src/lib-elgamal-mod.c.s
 
 # Help Target
 help:
@@ -400,30 +400,30 @@ help:
 	@echo "... main-anon-proxy"
 	@echo "... main-elgamal-mod"
 	@echo "... mdr"
-	@echo "... libs/lib-mesg.o"
-	@echo "... libs/lib-mesg.i"
-	@echo "... libs/lib-mesg.s"
-	@echo "... libs/lib-misc.o"
-	@echo "... libs/lib-misc.i"
-	@echo "... libs/lib-misc.s"
-	@echo "... libs/lib-timing.o"
-	@echo "... libs/lib-timing.i"
-	@echo "... libs/lib-timing.s"
-	@echo "... src/anon-proxy.o"
-	@echo "... src/anon-proxy.i"
-	@echo "... src/anon-proxy.s"
-	@echo "... src/bench-elgamal-mod.o"
-	@echo "... src/bench-elgamal-mod.i"
-	@echo "... src/bench-elgamal-mod.s"
-	@echo "... src/elgamal-mod.o"
-	@echo "... src/elgamal-mod.i"
-	@echo "... src/elgamal-mod.s"
-	@echo "... src/main-anon-proxy.o"
-	@echo "... src/main-anon-proxy.i"
-	@echo "... src/main-anon-proxy.s"
-	@echo "... src/main-elgamal-mod.o"
-	@echo "... src/main-elgamal-mod.i"
-	@echo "... src/main-elgamal-mod.s"
+	@echo "... benchmark/bench-elgamal-mod.o"
+	@echo "... benchmark/bench-elgamal-mod.i"
+	@echo "... benchmark/bench-elgamal-mod.s"
+	@echo "... examples/main-anon-proxy.o"
+	@echo "... examples/main-anon-proxy.i"
+	@echo "... examples/main-anon-proxy.s"
+	@echo "... examples/main-elgamal-mod.o"
+	@echo "... examples/main-elgamal-mod.i"
+	@echo "... examples/main-elgamal-mod.s"
+	@echo "... libs-mdr/lib-mesg.o"
+	@echo "... libs-mdr/lib-mesg.i"
+	@echo "... libs-mdr/lib-mesg.s"
+	@echo "... libs-mdr/lib-misc.o"
+	@echo "... libs-mdr/lib-misc.i"
+	@echo "... libs-mdr/lib-misc.s"
+	@echo "... libs-mdr/lib-timing.o"
+	@echo "... libs-mdr/lib-timing.i"
+	@echo "... libs-mdr/lib-timing.s"
+	@echo "... src/lib-anon-proxy.o"
+	@echo "... src/lib-anon-proxy.i"
+	@echo "... src/lib-anon-proxy.s"
+	@echo "... src/lib-elgamal-mod.o"
+	@echo "... src/lib-elgamal-mod.i"
+	@echo "... src/lib-elgamal-mod.s"
 .PHONY : help
 
 

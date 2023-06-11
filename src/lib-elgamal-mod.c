@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include "elgamal-mod.h"
+#include "lib-elgamal-mod.h"
 #include "lib-mesg.h"
 
 /* generazione delle chiavi per uno schema di cifratura Elgamal: possibilità di

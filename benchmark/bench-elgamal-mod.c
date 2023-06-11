@@ -1,4 +1,4 @@
-#include "elgamal-mod.h"
+#include "lib-elgamal-mod.h"
 #include "lib-timing.h"
 #include "lib-mesg.h"
 #include "lib-misc.h"

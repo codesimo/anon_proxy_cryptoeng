@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "anon-proxy.h"
+#include "lib-anon-proxy.h"
 
 void anon_proxy_h1(anon_proxy_params_t params,
                    uint8_t *input, size_t input_size, mpz_t output)

@@ -1,6 +1,6 @@
 #ifndef ANON_PROXY_H
 #define ANON_PROXY_H
-// #include "elgamal-mod.h"
+// #include "lib-elgamal-mod.h"
 #include "lib-misc.h"
 #include "lib-mesg.h"
 
