@@ -116,6 +116,43 @@ void elgamal_mod_h2(uint8_t *input, size_t input_size, uint8_t *output)
     elgamal_mod_hash_ctx_digest(&ctx, elgamal_mod_ske_key_size, output);
 }
 
+void elgamal_mod_plaintext_init_manual(elgamal_plaintext_t plaintext, uint8_t *input, size_t input_size)
+{
+    plaintext->m_size = input_size;
+    plaintext->m = malloc(input_size);
+    memcpy(plaintext->m, input, input_size);
+}
+
+void elgamal_mod_plaintext_init_random(elgamal_plaintext_t plaintext, gmp_randstate_t prng, size_t input_size)
+{
+    plaintext->m_size = input_size;
+    plaintext->m = malloc(input_size);
+    int i;
+    for (i = 0; i < input_size; i++)
+    {
+        plaintext->m[i] = gmp_urandomm_ui(prng, 256);
+    }
+}
+
+void elgamal_mod_plaintext_clear(elgamal_plaintext_t plaintext)
+{
+    plaintext->m_size = 0;
+    free(plaintext->m);
+    plaintext->m = NULL;
+}
+
+void elgamal_mod_ciphertext_clear(elgamal_ciphertext_t ciphertext)
+{
+    mpz_clears(ciphertext->c1, NULL);
+    free(ciphertext->c2);
+    ciphertext->c2 = NULL;
+    ciphertext->c2_size = 0;
+}
+void elgamal_mod_params_clear(elgamal_mod_params_t params)
+{
+    mpz_clears(params->p, params->q, params->g, params->pk, params->sk, NULL);
+}
+
 void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elgamal_plaintext_t plaintext, elgamal_ciphertext_t ciphertext)
 {
 
