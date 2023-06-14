@@ -118,7 +118,8 @@ void anon_proxy_plaintext_init_manual(anon_proxy_plaintext_t plaintext, uint8_t 
 void anon_proxy_plaintext_init_random(gmp_randstate_t prng, anon_proxy_plaintext_t plaintext, size_t m_size)
 {
     plaintext->m = malloc(m_size);
-    for (size_t i = 0; i < m_size; i++)
+    size_t i;
+    for (i = 0; i < m_size; i++)
         plaintext->m[i] = gmp_urandomm_ui(prng, 256);
     plaintext->m_size = m_size;
 }
@@ -183,10 +184,10 @@ void anon_proxy_init(anon_proxy_params_t params,
         mpz_powm(tmp, params->g, params->q, params->p);
     } while ((mpz_cmp_ui(params->g, 1) == 0) || (mpz_cmp_ui(tmp, 1) != 0));
 
-    pmesg(msg_normal, "\n-------------Initialization completed-------------");
-    pmesg_mpz(msg_normal, "modulo", params->p);
-    pmesg_mpz(msg_normal, "ordine del sottogruppo", params->q);
-    pmesg_mpz(msg_normal, "generatore del sottogruppo", params->g);
+    pmesg(msg_verbose, "Inizializzazione completata");
+    pmesg_mpz(msg_very_verbose, "modulo", params->p);
+    pmesg_mpz(msg_very_verbose, "ordine del sottogruppo", params->q);
+    pmesg_mpz(msg_very_verbose, "generatore del sottogruppo", params->g);
 }
 
 void anon_proxy_h4_x_num(anon_proxy_params_t params, mpz_t x, uint8_t num, mpz_t output)
@@ -200,6 +201,7 @@ void anon_proxy_h4_x_num(anon_proxy_params_t params, mpz_t x, uint8_t num, mpz_t
 
 void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk)
 {
+    pmesg(msg_verbose, "Generazione chiavi");
     mpz_inits(sk->sk, pk->pk1, pk->pk2, NULL);
 
     mpz_urandomm(sk->sk, prng, params->q);
@@ -214,10 +216,10 @@ void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_pr
     mpz_add(h4_0_out, h4_0_out, h4_1_out);
     mpz_powm(pk->pk2, params->g, h4_0_out, params->p);
 
-    pmesg(msg_normal, "\n-------------Key generation completed-------------");
-    pmesg_mpz(msg_normal, "chiave privata", sk->sk);
-    pmesg_mpz(msg_normal, "chiave pubblica pk1", pk->pk1);
-    pmesg_mpz(msg_normal, "chiave pubblica pk2", pk->pk2);
+    pmesg(msg_verbose, "Generazione chiavi completata");
+    pmesg_mpz(msg_very_verbose, "chiave privata", sk->sk);
+    pmesg_mpz(msg_very_verbose, "chiave pubblica pk1", pk->pk1);
+    pmesg_mpz(msg_very_verbose, "chiave pubblica pk2", pk->pk2);
 
     mpz_clears(h4_0_out, h4_1_out, NULL);
 }
@@ -295,7 +297,7 @@ void anon_proxy_create_h3_ABCD(anon_proxy_params_t params, mpz_t A, mpz_t B, mpz
 
 void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, anon_proxy_rekey_t rekey)
 {
-    pmesg(msg_normal, "\n---------------------Rekeygen---------------------");
+    pmesg(msg_verbose, "Inizializzazione rekeygen");
 
     mpz_t a1, a2, b1, b2;
     mpz_inits(a1, a2, b1, b2, NULL);
@@ -306,8 +308,8 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
     mpz_init_set(rekey->rekey1[0], a1);
     mpz_init_set(rekey->rekey1[1], b1);
 
-    pmesg_mpz(msg_normal, "a1", rekey->rekey1[0]);
-    pmesg_mpz(msg_normal, "b1", rekey->rekey1[1]);
+    pmesg_mpz(msg_very_verbose, "a1", rekey->rekey1[0]);
+    pmesg_mpz(msg_very_verbose, "b1", rekey->rekey1[1]);
 
     pmesg_mpz(msg_very_verbose, "a2", a2);
     pmesg_mpz(msg_very_verbose, "b2", b2);
@@ -335,20 +337,16 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
 
     anon_proxy_h1(params, r_a2_b2, r_a2_b2_size, h1_output);
 
-    // rk1 = (a1, b1)
-    mpz_init_set(rekey->rekey1[0], a1);
-    mpz_init_set(rekey->rekey1[1], b1);
-
-    // mpz_init(rekey->rekey2_1);
     //  rk2 = (g^h1, ...)
     mpz_powm(rekey->rekey2_1, params->g, h1_output, params->p);
 
+    // pk1^H1_output
     mpz_t h2_input;
     mpz_init(h2_input);
-    // pk1^H1_output
     mpz_powm(h2_input, pk->pk1, h1_output, params->p);
 
     uint8_t h2_output[anon_proxy_ske_key_size];
+    memset(h2_output, 0, anon_proxy_ske_key_size);
     anon_proxy_h2(params, h2_input, h2_output);
 
     mpz_clears(h1_output, h2_input, NULL);
@@ -369,8 +367,8 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
                                  rekey->rekey2_2,
                                  r_a2_b2);
 
-    pmesg_mpz(msg_normal, "rk2_1 (U1)", rekey->rekey2_1);
-    pmesg_hex(msg_normal, "rk2_2 (U2)", rekey->rekey2_2_size, rekey->rekey2_2);
+    pmesg_mpz(msg_very_verbose, "rk2_1 (U1)", rekey->rekey2_1);
+    pmesg_hex(msg_very_verbose, "rk2_2 (U2)", rekey->rekey2_2_size, rekey->rekey2_2);
 
     free(r_a2_b2);
     mpz_clears(a1, a2, b1, b2, NULL);
@@ -378,7 +376,7 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
 
 void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_pk_t pk, anon_proxy_plaintext_t plaintext, anon_proxy_ciphertext_t ciphertext)
 {
-    pmesg(msg_normal, "\n--------------------Encryption--------------------");
+    pmesg(msg_verbose, "Inizio cifratura");
     mpz_t r, r_1;
     mpz_inits(r, r_1, NULL);
     do
@@ -395,9 +393,9 @@ void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_p
     mpz_powm(ciphertext->B, pk->pk1, r, params->p);
     mpz_powm(ciphertext->C, params->g, r_1, params->p);
 
-    pmesg_mpz(msg_normal, "A", ciphertext->A);
-    pmesg_mpz(msg_normal, "B", ciphertext->B);
-    pmesg_mpz(msg_normal, "C", ciphertext->C);
+    pmesg_mpz(msg_very_verbose, "A", ciphertext->A);
+    pmesg_mpz(msg_very_verbose, "B", ciphertext->B);
+    pmesg_mpz(msg_very_verbose, "C", ciphertext->C);
 
     mpz_t h2_input;
     mpz_init(h2_input);
@@ -428,7 +426,7 @@ void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_p
                                  ciphertext->D,
                                  plaintext->m);
 
-    pmesg_hex(msg_normal, "D", ciphertext->D_size, ciphertext->D);
+    pmesg_hex(msg_very_verbose, "D", ciphertext->D_size, ciphertext->D);
 
     anon_proxy_create_h3_ABCD(params, ciphertext->A, ciphertext->B, ciphertext->C, ciphertext->D, ciphertext->D_size, ciphertext->S);
 
@@ -436,14 +434,15 @@ void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_p
     mpz_add(ciphertext->S, ciphertext->S, r_1);
     mpz_mod(ciphertext->S, ciphertext->S, params->q);
 
-    pmesg_mpz(msg_normal, "S", ciphertext->S);
+    pmesg_mpz(msg_very_verbose, "S", ciphertext->S);
 
+    pmesg(msg_verbose, "Fine cifratura");
     mpz_clears(r, r_1, NULL);
 }
 
 void anon_proxy_decrypt_original(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_ciphertext_t ciphertext, anon_proxy_plaintext_t plaintext)
 {
-    pmesg(msg_normal, "\n--------------------Decryption--------------------");
+    pmesg(msg_verbose, "Inizio decifratura messaggio originale");
 
     mpz_t left_check;
     mpz_init(left_check);
@@ -493,12 +492,13 @@ void anon_proxy_decrypt_original(anon_proxy_params_t params, anon_proxy_sk_t sk,
                                  plaintext->m,
                                  ciphertext->D);
 
-    pmesg_hex(msg_normal, "decrypted", plaintext->m_size, plaintext->m);
+    pmesg_hex(msg_very_verbose, "decrypted", plaintext->m_size, plaintext->m);
+    pmesg(msg_verbose, "Fine decifratura messaggio originale");
 }
 
 void anon_proxy_reencrypt(anon_proxy_params_t params, anon_proxy_rekey_t rekey, anon_proxy_ciphertext_t ciphertext, anon_proxy_reencrypted_ciphertext_t reencrypted_ciphertext)
 {
-    pmesg(msg_normal, "\n-------------------Reencryption-------------------");
+    pmesg(msg_verbose, "Inizio recifratura");
 
     mpz_t right_check;
     mpz_init(right_check);
@@ -529,16 +529,17 @@ void anon_proxy_reencrypt(anon_proxy_params_t params, anon_proxy_rekey_t rekey, 
     reencrypted_ciphertext->U2 = malloc(reencrypted_ciphertext->U2_size);
     memcpy(reencrypted_ciphertext->U2, rekey->rekey2_2, reencrypted_ciphertext->U2_size);
 
-    pmesg_mpz(msg_normal, "A_1", reencrypted_ciphertext->A_1);
-    pmesg_mpz(msg_normal, "B_1", reencrypted_ciphertext->B_1);
-    pmesg_hex(msg_normal, "D", reencrypted_ciphertext->D_size, reencrypted_ciphertext->D);
-    pmesg_mpz(msg_normal, "U1", reencrypted_ciphertext->U1);
-    pmesg_hex(msg_normal, "U2", reencrypted_ciphertext->U2_size, reencrypted_ciphertext->U2);
+    pmesg_mpz(msg_very_verbose, "A_1", reencrypted_ciphertext->A_1);
+    pmesg_mpz(msg_very_verbose, "B_1", reencrypted_ciphertext->B_1);
+    pmesg_hex(msg_very_verbose, "D", reencrypted_ciphertext->D_size, reencrypted_ciphertext->D);
+    pmesg_mpz(msg_very_verbose, "U1", reencrypted_ciphertext->U1);
+    pmesg_hex(msg_very_verbose, "U2", reencrypted_ciphertext->U2_size, reencrypted_ciphertext->U2);
+    pmesg(msg_verbose, "Fine recifratura");
 }
 
 void anon_proxy_decrypt_reencrypted(anon_proxy_params_t params, anon_proxy_sk_t sk, anon_proxy_reencrypted_ciphertext_t reencrypted_ciphertext, anon_proxy_plaintext_t plaintext)
 {
-    pmesg(msg_normal, "\n----------------Decrypt Reencrypted---------------");
+    pmesg(msg_verbose, "Inizio decifratura messaggio recifrato");
     mpz_t h2_input;
     mpz_init(h2_input);
     mpz_powm(h2_input, reencrypted_ciphertext->U1, sk->sk, params->p);
@@ -587,9 +588,9 @@ void anon_proxy_decrypt_reencrypted(anon_proxy_params_t params, anon_proxy_sk_t 
     mpz_import(a2, q_bytes, 1, 1, 0, 0, r_a2_b2 + q_bytes);
     mpz_import(b2, q_bytes, 1, 1, 0, 0, r_a2_b2 + 2 * q_bytes);
 
-    pmesg_mpz(msg_verbose, "r", r);
-    pmesg_mpz(msg_verbose, "a2", a2);
-    pmesg_mpz(msg_verbose, "b2", b2);
+    pmesg_mpz(msg_very_verbose, "r", r);
+    pmesg_mpz(msg_very_verbose, "a2", a2);
+    pmesg_mpz(msg_very_verbose, "b2", b2);
 
     mpz_t a_1, b_1, h2_input_2;
     mpz_inits(a_1, b_1, h2_input_2, NULL);
@@ -626,5 +627,6 @@ void anon_proxy_decrypt_reencrypted(anon_proxy_params_t params, anon_proxy_sk_t 
                                  reencrypted_ciphertext->D_size,
                                  plaintext->m,
                                  reencrypted_ciphertext->D);
-    pmesg_hex(msg_normal, "plaintext", plaintext->m_size, plaintext->m);
+    pmesg_hex(msg_very_verbose, "plaintext", plaintext->m_size, plaintext->m);
+    pmesg(msg_verbose, "Fine decifratura messaggio recifrato");
 }

@@ -3,13 +3,10 @@
 #include "lib-elgamal-mod.h"
 #include "lib-mesg.h"
 
-/* generazione delle chiavi per uno schema di cifratura Elgamal: possibilità di
- * lavorare nel sottogruppo di ordine primo q e/o di utilizzare precomputazione
- * sulle esponenziazioni a base fissa della cifratura */
 void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gmp_randstate_t prng)
 {
 
-    pmesg(msg_verbose, "Initialization...");
+    pmesg(msg_verbose, "Inizializzazione...");
 
     assert(params);
 
@@ -80,7 +77,7 @@ void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gm
     /* pk = g^sk mod p */
     mpz_powm(params->pk, params->g, params->sk, params->p);
 
-    pmesg(msg_verbose, "Initialization completed");
+    pmesg(msg_verbose, "Inizializzazione completata");
     pmesg_mpz(msg_very_verbose, "modulo", params->p);
     pmesg_mpz(msg_very_verbose, "ordine del sottogruppo", params->q);
     pmesg_mpz(msg_very_verbose, "generatore del sottogruppo", params->g);
@@ -155,8 +152,9 @@ void elgamal_mod_params_clear(elgamal_mod_params_t params)
 
 void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elgamal_plaintext_t plaintext, elgamal_ciphertext_t ciphertext)
 {
-
+    pmesg(msg_verbose, "Inizio cifratura");
     assert(plaintext->m_size % 16 == 0);
+    mpz_init(ciphertext->c1);
 
     // Random r: 0 < r < q
     mpz_t r;
@@ -178,7 +176,7 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
 
     mpz_export(h1_in_bytes, &x, 1, 1, 1, 0, r);
     uint8_t *r_bytes = h1_in_bytes;
-    pmesg_hex(msg_verbose, "r", r_bytes_size, r_bytes);
+    pmesg_hex(msg_very_verbose, "r", r_bytes_size, r_bytes);
 
     memcpy(h1_in_bytes + r_bytes_size, plaintext->m, plaintext->m_size);
     pmesg_hex(msg_very_verbose, "r||m", h1_input_size, h1_in_bytes);
@@ -192,7 +190,7 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
 
     // C1 = g^h1_res mod q
     mpz_powm(ciphertext->c1, params->g, h1_res, params->p);
-    pmesg_mpz(msg_verbose, "C1", ciphertext->c1);
+    pmesg_mpz(msg_very_verbose, "C1", ciphertext->c1);
 
     // pk^h1_res mod p
     mpz_t h1_input;
@@ -234,13 +232,14 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
                                   ciphertext->c2,
                                   h1_in_bytes);
 
-    pmesg_hex(msg_verbose, "C2", h1_input_size, ciphertext->c2);
+    pmesg_hex(msg_very_verbose, "C2", h1_input_size, ciphertext->c2);
 
     mpz_clears(r, h1_res, h1_input, NULL);
 }
 
 void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphertext, elgamal_plaintext_t plaintext)
 {
+    pmesg(msg_verbose, "Inizio decifratura");
     // C1^sk mod p
     mpz_t h2_input;
     mpz_init(h2_input);
@@ -278,7 +277,7 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
                                   dec_output,
                                   ciphertext->c2);
 
-    pmesg_hex(msg_verbose, "r'||m'", ciphertext->c2_size, dec_output);
+    pmesg_hex(msg_very_verbose, "r'||m'", ciphertext->c2_size, dec_output);
 
     // H1(r'||m')
     mpz_t h1_res;
@@ -297,8 +296,8 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
     plaintext->m = (uint8_t *)malloc(plaintext->m_size * sizeof(uint8_t));
     memcpy(plaintext->m, dec_output + params->q_bits / 8, plaintext->m_size);
     uint8_t *r_first = dec_output;
-    pmesg_hex(msg_verbose, "r'", params->q_bits / 8, r_first);
-    pmesg_hex(msg_verbose, "m'", plaintext->m_size, plaintext->m);
+    pmesg_hex(msg_very_verbose, "r'", params->q_bits / 8, r_first);
+    pmesg_hex(msg_very_verbose, "m'", plaintext->m_size, plaintext->m);
 
     mpz_clears(h2_input, h1_res, NULL);
 }
