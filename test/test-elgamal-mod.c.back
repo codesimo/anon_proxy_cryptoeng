@@ -1,0 +1,73 @@
+#include "lib-elgamal-mod.h"
+#include "lib-misc.h"
+#include "lib-mesg.h"
+#include "string.h"
+
+void test_internal(gmp_randstate_t prng, elgamal_mod_lambda lambda, elgamal_plaintext_t plaintext)
+{
+    elgamal_mod_params_t params;
+
+    elgamal_mod_init(params, lambda, prng);
+
+    elgamal_ciphertext_t ciphertext;
+
+    elgamal_mod_encrypt(params, prng, plaintext, ciphertext);
+
+    elgamal_plaintext_t plaintext2;
+
+    elgamal_mod_decrypt(params, ciphertext, plaintext2);
+    assert(plaintext->m_size == plaintext2->m_size);
+    assert(memcmp(plaintext->m, plaintext2->m, plaintext->m_size) == 0);
+
+    elgamal_mod_plaintext_clear(plaintext2);
+    elgamal_mod_ciphertext_clear(ciphertext);
+
+    elgamal_mod_params_clear(params);
+
+    pmesg(msg_normal, "\033[32mTest passed for lambda = %d\033[0m", lambda);
+}
+
+void test_80(gmp_randstate_t prng, elgamal_plaintext_t plaintext)
+{
+    elgamal_mod_lambda lambda = elgamal_mod_lambda_80;
+
+    test_internal(prng, lambda, plaintext);
+}
+
+void test_112(gmp_randstate_t prng, elgamal_plaintext_t plaintext)
+{
+    elgamal_mod_lambda lambda = elgamal_mod_lambda_128;
+
+    test_internal(prng, lambda, plaintext);
+}
+
+void test_128(gmp_randstate_t prng, elgamal_plaintext_t plaintext)
+{
+    elgamal_mod_lambda lambda = elgamal_mod_lambda_112;
+
+    test_internal(prng, lambda, plaintext);
+}
+
+int main(int argc, char **argv)
+{
+    set_messaging_level(msg_normal);
+    gmp_randstate_t prng;
+    gmp_randinit_default(prng);
+    gmp_randseed_os_rng(prng, 256);
+
+    int m_len[3] = {16, 32, 256};
+    int i;
+    for (i = 0; i < 3; i++)
+    {
+        elgamal_plaintext_t plaintext;
+        elgamal_mod_plaintext_init_random(plaintext, prng, m_len[i]);
+        pmesg(msg_normal, "Trying message len: %d", m_len[i]);
+        pmesg_hex(msg_normal, "Message:", plaintext->m_size, plaintext->m);
+        test_80(prng, plaintext);
+        test_112(prng, plaintext);
+        test_128(prng, plaintext);
+        elgamal_mod_plaintext_clear(plaintext);
+    }
+
+    return 0;
+}

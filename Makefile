@@ -182,6 +182,19 @@ bench-elgamal-mod/fast:
 .PHONY : bench-elgamal-mod/fast
 
 #=============================================================================
+# Target rules for targets named test-elgamal-mod
+
+# Build rule for target.
+test-elgamal-mod: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test-elgamal-mod
+.PHONY : test-elgamal-mod
+
+# fast build rule for target.
+test-elgamal-mod/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test-elgamal-mod.dir/build.make CMakeFiles/test-elgamal-mod.dir/build
+.PHONY : test-elgamal-mod/fast
+
+#=============================================================================
 # Target rules for targets named main-anon-proxy
 
 # Build rule for target.
@@ -386,6 +399,30 @@ src/lib-elgamal-mod.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/lib-elgamal-mod.c.s
 .PHONY : src/lib-elgamal-mod.c.s
 
+test/test-elgamal-mod.o: test/test-elgamal-mod.c.o
+.PHONY : test/test-elgamal-mod.o
+
+# target to build an object file
+test/test-elgamal-mod.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test-elgamal-mod.dir/build.make CMakeFiles/test-elgamal-mod.dir/test/test-elgamal-mod.c.o
+.PHONY : test/test-elgamal-mod.c.o
+
+test/test-elgamal-mod.i: test/test-elgamal-mod.c.i
+.PHONY : test/test-elgamal-mod.i
+
+# target to preprocess a source file
+test/test-elgamal-mod.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test-elgamal-mod.dir/build.make CMakeFiles/test-elgamal-mod.dir/test/test-elgamal-mod.c.i
+.PHONY : test/test-elgamal-mod.c.i
+
+test/test-elgamal-mod.s: test/test-elgamal-mod.c.s
+.PHONY : test/test-elgamal-mod.s
+
+# target to generate assembly for a file
+test/test-elgamal-mod.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test-elgamal-mod.dir/build.make CMakeFiles/test-elgamal-mod.dir/test/test-elgamal-mod.c.s
+.PHONY : test/test-elgamal-mod.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -400,6 +437,7 @@ help:
 	@echo "... main-anon-proxy"
 	@echo "... main-elgamal-mod"
 	@echo "... mdr"
+	@echo "... test-elgamal-mod"
 	@echo "... benchmark/bench-elgamal-mod.o"
 	@echo "... benchmark/bench-elgamal-mod.i"
 	@echo "... benchmark/bench-elgamal-mod.s"
@@ -424,6 +462,9 @@ help:
 	@echo "... src/lib-elgamal-mod.o"
 	@echo "... src/lib-elgamal-mod.i"
 	@echo "... src/lib-elgamal-mod.s"
+	@echo "... test/test-elgamal-mod.o"
+	@echo "... test/test-elgamal-mod.i"
+	@echo "... test/test-elgamal-mod.s"
 .PHONY : help
 
 
