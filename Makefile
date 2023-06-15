@@ -169,19 +169,6 @@ main-elgamal-mod/fast:
 .PHONY : main-elgamal-mod/fast
 
 #=============================================================================
-# Target rules for targets named bench-elgamal-mod
-
-# Build rule for target.
-bench-elgamal-mod: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 bench-elgamal-mod
-.PHONY : bench-elgamal-mod
-
-# fast build rule for target.
-bench-elgamal-mod/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/build
-.PHONY : bench-elgamal-mod/fast
-
-#=============================================================================
 # Target rules for targets named test-elgamal-mod
 
 # Build rule for target.
@@ -207,29 +194,18 @@ main-anon-proxy/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main-anon-proxy.dir/build.make CMakeFiles/main-anon-proxy.dir/build
 .PHONY : main-anon-proxy/fast
 
-benchmark/bench-elgamal-mod.o: benchmark/bench-elgamal-mod.c.o
-.PHONY : benchmark/bench-elgamal-mod.o
+#=============================================================================
+# Target rules for targets named test-anon-proxy
 
-# target to build an object file
-benchmark/bench-elgamal-mod.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/benchmark/bench-elgamal-mod.c.o
-.PHONY : benchmark/bench-elgamal-mod.c.o
+# Build rule for target.
+test-anon-proxy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test-anon-proxy
+.PHONY : test-anon-proxy
 
-benchmark/bench-elgamal-mod.i: benchmark/bench-elgamal-mod.c.i
-.PHONY : benchmark/bench-elgamal-mod.i
-
-# target to preprocess a source file
-benchmark/bench-elgamal-mod.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/benchmark/bench-elgamal-mod.c.i
-.PHONY : benchmark/bench-elgamal-mod.c.i
-
-benchmark/bench-elgamal-mod.s: benchmark/bench-elgamal-mod.c.s
-.PHONY : benchmark/bench-elgamal-mod.s
-
-# target to generate assembly for a file
-benchmark/bench-elgamal-mod.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench-elgamal-mod.dir/build.make CMakeFiles/bench-elgamal-mod.dir/benchmark/bench-elgamal-mod.c.s
-.PHONY : benchmark/bench-elgamal-mod.c.s
+# fast build rule for target.
+test-anon-proxy/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test-anon-proxy.dir/build.make CMakeFiles/test-anon-proxy.dir/build
+.PHONY : test-anon-proxy/fast
 
 examples/main-anon-proxy.o: examples/main-anon-proxy.c.o
 .PHONY : examples/main-anon-proxy.o
@@ -399,6 +375,30 @@ src/lib-elgamal-mod.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elgamal-mod.dir/build.make CMakeFiles/elgamal-mod.dir/src/lib-elgamal-mod.c.s
 .PHONY : src/lib-elgamal-mod.c.s
 
+test/test-anon-proxy.o: test/test-anon-proxy.c.o
+.PHONY : test/test-anon-proxy.o
+
+# target to build an object file
+test/test-anon-proxy.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test-anon-proxy.dir/build.make CMakeFiles/test-anon-proxy.dir/test/test-anon-proxy.c.o
+.PHONY : test/test-anon-proxy.c.o
+
+test/test-anon-proxy.i: test/test-anon-proxy.c.i
+.PHONY : test/test-anon-proxy.i
+
+# target to preprocess a source file
+test/test-anon-proxy.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test-anon-proxy.dir/build.make CMakeFiles/test-anon-proxy.dir/test/test-anon-proxy.c.i
+.PHONY : test/test-anon-proxy.c.i
+
+test/test-anon-proxy.s: test/test-anon-proxy.c.s
+.PHONY : test/test-anon-proxy.s
+
+# target to generate assembly for a file
+test/test-anon-proxy.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test-anon-proxy.dir/build.make CMakeFiles/test-anon-proxy.dir/test/test-anon-proxy.c.s
+.PHONY : test/test-anon-proxy.c.s
+
 test/test-elgamal-mod.o: test/test-elgamal-mod.c.o
 .PHONY : test/test-elgamal-mod.o
 
@@ -432,15 +432,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... anon-proxy"
-	@echo "... bench-elgamal-mod"
 	@echo "... elgamal-mod"
 	@echo "... main-anon-proxy"
 	@echo "... main-elgamal-mod"
 	@echo "... mdr"
+	@echo "... test-anon-proxy"
 	@echo "... test-elgamal-mod"
-	@echo "... benchmark/bench-elgamal-mod.o"
-	@echo "... benchmark/bench-elgamal-mod.i"
-	@echo "... benchmark/bench-elgamal-mod.s"
 	@echo "... examples/main-anon-proxy.o"
 	@echo "... examples/main-anon-proxy.i"
 	@echo "... examples/main-anon-proxy.s"
@@ -462,6 +459,9 @@ help:
 	@echo "... src/lib-elgamal-mod.o"
 	@echo "... src/lib-elgamal-mod.i"
 	@echo "... src/lib-elgamal-mod.s"
+	@echo "... test/test-anon-proxy.o"
+	@echo "... test/test-anon-proxy.i"
+	@echo "... test/test-anon-proxy.s"
 	@echo "... test/test-elgamal-mod.o"
 	@echo "... test/test-elgamal-mod.i"
 	@echo "... test/test-elgamal-mod.s"
