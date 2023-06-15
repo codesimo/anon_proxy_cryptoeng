@@ -124,6 +124,49 @@ void anon_proxy_plaintext_init_random(gmp_randstate_t prng, anon_proxy_plaintext
     plaintext->m_size = m_size;
 }
 
+void anon_proxy_plaintext_print(FILE *file, anon_proxy_plaintext_t plaintext)
+{
+    size_t i;
+    for (i = 0; i < plaintext->m_size; i++)
+        fprintf(file, "%02x", plaintext->m[i]);
+    fprintf(file, "\n");
+};
+
+void anon_proxy_ciphertext_print(FILE *file, anon_proxy_ciphertext_t ciphertext)
+{
+    fprintf(file, "(");
+    mpz_out_str(file, 16, ciphertext->A);
+    fprintf(file, ", ");
+    mpz_out_str(file, 16, ciphertext->B);
+    fprintf(file, ", ");
+    mpz_out_str(file, 16, ciphertext->C);
+    fprintf(file, ", ");
+    size_t i;
+    for (i = 0; i < ciphertext->D_size; i++)
+        fprintf(file, "%02x", ciphertext->D[i]);
+    fprintf(file, ", ");
+    mpz_out_str(file, 16, ciphertext->S);
+    fprintf(file, ")\n");
+}
+
+void anon_proxy_reencrypted_ciphertext_print(FILE *file, anon_proxy_reencrypted_ciphertext_t ciphertext)
+{
+    fprintf(file, "(");
+    mpz_out_str(file, 16, ciphertext->A_1);
+    fprintf(file, ", ");
+    mpz_out_str(file, 16, ciphertext->B_1);
+    fprintf(file, ", ");
+    size_t i;
+    for (i = 0; i < ciphertext->D_size; i++)
+        fprintf(file, "%02x", ciphertext->D[i]);
+    fprintf(file, ", ");
+    mpz_out_str(file, 16, ciphertext->U1);
+    fprintf(file, ", ");
+    for (i = 0; i < ciphertext->U2_size; i++)
+        fprintf(file, "%02x", ciphertext->U2[i]);
+    fprintf(file, ")\n");
+};
+
 void anon_proxy_init(anon_proxy_params_t params,
                      gmp_randstate_t prng, anon_proxy_lambda lambda)
 {
@@ -466,7 +509,7 @@ void anon_proxy_decrypt_original(anon_proxy_params_t params, anon_proxy_sk_t sk,
     anon_proxy_h4_x_num(params, sk->sk, 1, h4_1);
 
     mpz_t a_pow, b_pow, h2_input;
-    mpz_inits(a_pow, b_pow, NULL);
+    mpz_inits(a_pow, b_pow, h2_input, NULL);
     mpz_powm(a_pow, ciphertext->A, h4_0, params->p);
     mpz_powm(b_pow, ciphertext->B, h4_1, params->p);
     mpz_mul(h2_input, a_pow, b_pow);

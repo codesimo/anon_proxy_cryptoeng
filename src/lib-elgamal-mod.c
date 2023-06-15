@@ -149,6 +149,28 @@ void elgamal_mod_params_clear(elgamal_mod_params_t params)
 {
     mpz_clears(params->p, params->q, params->g, params->pk, params->sk, NULL);
 }
+void elgamal_mod_plaintext_print(FILE *file, elgamal_plaintext_t plaintext)
+{
+    fprintf(file, "(");
+    size_t i;
+    for (i = 0; i < plaintext->m_size; i++)
+    {
+        fprintf(file, "%02x", plaintext->m[i]);
+    }
+    fprintf(file, ")\n");
+}
+void elgamal_mod_ciphertext_print(FILE *file, elgamal_ciphertext_t ciphertext)
+{
+    fprintf(file, "(");
+    mpz_out_str(file, 16, ciphertext->c1);
+    fprintf(file, ", ");
+    size_t i;
+    for (i = 0; i < ciphertext->c2_size; i++)
+    {
+        fprintf(file, "%02x", ciphertext->c2[i]);
+    }
+    fprintf(file, ")\n");
+}
 
 void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elgamal_plaintext_t plaintext, elgamal_ciphertext_t ciphertext)
 {

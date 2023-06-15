@@ -1,6 +1,7 @@
 #ifndef ELGAMAL_MOD_H
 #define ELGAMAL_MOD_H
 
+#include <stdio.h>
 #include <stdbool.h>
 #include <gmp.h>
 #include <nettle/aes.h>
@@ -88,6 +89,10 @@ void elgamal_mod_plaintext_clear(elgamal_plaintext_t plaintext);
 void elgamal_mod_ciphertext_clear(elgamal_ciphertext_t ciphertext);
 
 void elgamal_mod_params_clear(elgamal_mod_params_t params);
+
+void elgamal_mod_plaintext_print(FILE *file, elgamal_plaintext_t plaintext);
+
+void elgamal_mod_ciphertext_print(FILE *file, elgamal_ciphertext_t ciphertext);
 
 void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng,
                          elgamal_plaintext_t plaintext, elgamal_ciphertext_t ciphertext);
