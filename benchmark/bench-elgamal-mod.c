@@ -4,8 +4,11 @@
 #include "lib-misc.h"
 
 #include <string.h>
-
 #include <gmp.h>
+
+#define default_rng_bits 100
+#define default_lambda elgamal_mod_lambda_128
+#define default_message_bytes 32
 
 int main(int argc, char *argv[])
 {
@@ -16,10 +19,10 @@ int main(int argc, char *argv[])
     set_messaging_level(msg_silence);
     calibrate_timing_methods();
     gmp_randinit_default(prng);
-    gmp_randseed_os_rng(prng, 100);
+    gmp_randseed_os_rng(prng, default_rng_bits);
 
     elgamal_mod_params_t params;
-    enum elgamal_mod_lambda lambda = elgamal_mod_lambda_128;
+    enum elgamal_mod_lambda lambda = default_lambda;
     if (argc > 3)
     {
         printf("Usage: %s [lambda]\n", argv[0]);
@@ -43,22 +46,24 @@ int main(int argc, char *argv[])
     printf_et("elgamal_mod_init ", time, tu_millis, "\n");
 
     elgamal_plaintext_t plaintext;
-    plaintext->m_size = 32;
-    plaintext->m = (uint8_t *)malloc(plaintext->m_size * sizeof(uint8_t));
-    for (size_t i = 0; i < plaintext->m_size; i++)
-        plaintext->m[i] = rand() % 256;
+    elgamal_mod_plaintext_init_random(plaintext, prng, default_message_bytes);
 
     elgamal_ciphertext_t ciphertext;
 
     perform_wc_time_sampling_period(stats, 10, 10 * 1000, tu_millis, {
         elgamal_mod_encrypt(params, prng, plaintext, ciphertext);
+        elgamal_mod_ciphertext_clear(ciphertext);
     },
                                     {});
     printf_short_stats("elgamal_mod_encrypt ", stats, "\n");
 
+    elgamal_mod_encrypt(params, prng, plaintext, ciphertext);
+    elgamal_mod_plaintext_clear(plaintext);
+
     elgamal_plaintext_t decrypted;
     perform_wc_time_sampling_period(stats, 10, 10 * 1000, tu_millis, {
         elgamal_mod_decrypt(params, ciphertext, decrypted);
+        elgamal_mod_plaintext_clear(decrypted);
     },
                                     {});
     printf_short_stats("elgamal_mod_decrypt ", stats, "\n");

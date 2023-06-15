@@ -46,6 +46,7 @@ int main()
     anon_proxy_decrypt_reencrypted(params, sk_2, reencrypted_ciphertext, plaintext3);
     assert(plaintext->m_size == plaintext3->m_size);
     assert(memcmp(plaintext->m, plaintext3->m, plaintext->m_size) == 0);
+    printf("Tutto ok\n");
 
     return 0;
 }
