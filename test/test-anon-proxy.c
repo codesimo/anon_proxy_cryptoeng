@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
         else
         {
             printf("utilizzo: %s [verbose|quiet] "
-                   "[all|original|proxy]"
+                   "[all|original|proxy] "
                    "[lambda 80|112|128] [seed <n>] [message <n>] [bench]\n",
                    argv[0]);
             exit(1);
