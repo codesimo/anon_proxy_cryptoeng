@@ -175,7 +175,6 @@ void elgamal_mod_ciphertext_print(FILE *file, elgamal_ciphertext_t ciphertext)
 void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elgamal_plaintext_t plaintext, elgamal_ciphertext_t ciphertext)
 {
     pmesg(msg_verbose, "Inizio cifratura");
-    assert(plaintext->m_size % 16 == 0);
     mpz_init(ciphertext->c1);
 
     // Random r: 0 < r < q
@@ -317,8 +316,8 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
     plaintext->m_size = ciphertext->c2_size - params->q_bits / 8;
     plaintext->m = (uint8_t *)malloc(plaintext->m_size * sizeof(uint8_t));
     memcpy(plaintext->m, dec_output + params->q_bits / 8, plaintext->m_size);
-    uint8_t *r_first = dec_output;
-    pmesg_hex(msg_very_verbose, "r'", params->q_bits / 8, r_first);
+    uint8_t *r_1 = dec_output;
+    pmesg_hex(msg_very_verbose, "r'", params->q_bits / 8, r_1);
     pmesg_hex(msg_very_verbose, "m'", plaintext->m_size, plaintext->m);
 
     mpz_clears(h2_input, h1_res, NULL);

@@ -89,11 +89,6 @@ int main(int argc, char *argv[])
             assert(argv[i + 1]);
             fixed_msg = argv[i + 1];
             fixed_msg_len = strlen(fixed_msg);
-            if (fixed_msg_len % 16 != 0)
-            {
-                printf("lunghezza del messaggio non valida. Il messaggio deve essere %%16\n");
-                exit(1);
-            }
             i++;
         }
         else
