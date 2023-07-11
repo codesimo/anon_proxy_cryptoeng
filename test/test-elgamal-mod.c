@@ -19,19 +19,25 @@
 int main(int argc, char *argv[])
 {
     gmp_randstate_t prng;
+
     elgamal_mod_params_t params;
     elgamal_plaintext_t msg, msg2;
     elgamal_ciphertext_t enc;
-    char *fixed_msg = NULL; /* default: messaggio causale */
-    size_t fixed_msg_len = 0;
+
     bool do_bench = false;
     bool is_verbose = false;
+
+    char *fixed_msg = NULL; /* default: messaggio causale */
+    size_t fixed_msg_len = 0;
+    long prng_seed = -1; /* -1 = seed casuale sicuro */
+    elgamal_mod_lambda lambda = default_lambda;
+    bool use_pp = false;
+
     stats_t timing;
     elapsed_time_t time;
     long int applied_sampling_time = 0;
-    elgamal_mod_lambda lambda = default_lambda;
+
     int exit_status = 0;
-    long prng_seed = -1; /* -1 = seed casuale sicuro */
 
     for (int i = 1; i < argc; i++)
     {
@@ -91,10 +97,14 @@ int main(int argc, char *argv[])
             fixed_msg_len = strlen(fixed_msg);
             i++;
         }
+        else if (strcmp(argv[i], "use-pp") == 0)
+        {
+            use_pp = true;
+        }
         else
         {
             printf("utilizzo: %s [verbose|quiet] "
-                   "[lambda 80|112|128] [seed <n>] [message <n>] [bench]\n",
+                   "[lambda 80|112|128] [seed <n>] [message <n>] [bench] [use-pp]\n",
                    argv[0]);
             exit(1);
         }
@@ -122,7 +132,7 @@ int main(int argc, char *argv[])
 
     printf("\nGenerazione parametri Elgamal-mod\n");
     perform_oneshot_cpu_time_sampling(time, tu_sec, {
-        elgamal_mod_init(params, lambda, prng);
+        elgamal_mod_init(params, lambda, prng, use_pp);
     });
     if (do_bench)
         printf_et(" elgamal_mod_init: ", time, tu_sec, "\n");

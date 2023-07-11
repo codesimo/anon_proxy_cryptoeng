@@ -1,9 +1,10 @@
 #include <math.h>
 
+#include "lib-powm.h"
 #include "lib-elgamal-mod.h"
 #include "lib-mesg.h"
 
-void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gmp_randstate_t prng)
+void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gmp_randstate_t prng, bool use_pp)
 {
 
     pmesg(msg_verbose, "Inizializzazione...");
@@ -18,6 +19,7 @@ void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gm
     mpz_inits(params->p, params->q, params->g, params->pk, params->sk, NULL);
 
     params->lambda = lambda;
+    params->use_pp = use_pp;
 
     switch (lambda)
     {
@@ -76,6 +78,17 @@ void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda, gm
 
     /* pk = g^sk mod p */
     mpz_powm(params->pk, params->g, params->sk, params->p);
+
+    if (use_pp)
+    {
+        pmesg(msg_verbose, "Preprocessing enabled");
+        mpz_pp_powm_init(params->g_pp, params->q_bits, params->g, params->p);
+        mpz_pp_powm_init(params->pk_pp, params->q_bits, params->pk, params->p);
+    }
+    else
+    {
+        pmesg(msg_verbose, "Preprocessing disabled");
+    }
 
     pmesg(msg_verbose, "Inizializzazione completata");
     pmesg_mpz(msg_very_verbose, "modulo", params->p);
@@ -148,6 +161,11 @@ void elgamal_mod_ciphertext_clear(elgamal_ciphertext_t ciphertext)
 void elgamal_mod_params_clear(elgamal_mod_params_t params)
 {
     mpz_clears(params->p, params->q, params->g, params->pk, params->sk, NULL);
+    if (params->use_pp)
+    {
+        mpz_pp_powm_clear(params->g_pp);
+        mpz_pp_powm_clear(params->pk_pp);
+    }
 }
 void elgamal_mod_plaintext_print(FILE *file, elgamal_plaintext_t plaintext)
 {
@@ -210,13 +228,27 @@ void elgamal_mod_encrypt(elgamal_mod_params_t params, gmp_randstate_t prng, elga
     pmesg_mpz(msg_very_verbose, "H1(r||m)", h1_res);
 
     // C1 = g^h1_res mod q
-    mpz_powm(ciphertext->c1, params->g, h1_res, params->p);
+    if (params->use_pp)
+    {
+        mpz_pp_powm(ciphertext->c1, h1_res, params->g_pp);
+    }
+    else
+    {
+        mpz_powm(ciphertext->c1, params->g, h1_res, params->p);
+    }
     pmesg_mpz(msg_very_verbose, "C1", ciphertext->c1);
 
     // pk^h1_res mod p
     mpz_t h1_input;
     mpz_init(h1_input);
-    mpz_powm(h1_input, params->pk, h1_res, params->p);
+    if (params->use_pp)
+    {
+        mpz_pp_powm(h1_input, h1_res, params->pk_pp);
+    }
+    else
+    {
+        mpz_powm(h1_input, params->pk, h1_res, params->p);
+    }
     pmesg_mpz(msg_very_verbose, "pk^H1", h1_input);
 
     // H2(pk^h1_res)
@@ -307,7 +339,14 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
     elgamal_mod_h1(params, dec_output, ciphertext->c2_size, h1_res);
     pmesg_mpz(msg_very_verbose, "H1(r'||m')", h1_res);
 
-    mpz_powm(h1_res, params->g, h1_res, params->p);
+    if (params->use_pp)
+    {
+        mpz_pp_powm(h1_res, h1_res, params->g_pp);
+    }
+    else
+    {
+        mpz_powm(h1_res, params->g, h1_res, params->p);
+    }
 
     // C1 =?= g^H1(r'||m')
     assert(mpz_cmp(h1_res, ciphertext->c1) == 0);

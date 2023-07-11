@@ -303,6 +303,30 @@ libs-mdr/lib-misc.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-misc.c.s
 .PHONY : libs-mdr/lib-misc.c.s
 
+libs-mdr/lib-powm.o: libs-mdr/lib-powm.c.o
+.PHONY : libs-mdr/lib-powm.o
+
+# target to build an object file
+libs-mdr/lib-powm.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-powm.c.o
+.PHONY : libs-mdr/lib-powm.c.o
+
+libs-mdr/lib-powm.i: libs-mdr/lib-powm.c.i
+.PHONY : libs-mdr/lib-powm.i
+
+# target to preprocess a source file
+libs-mdr/lib-powm.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-powm.c.i
+.PHONY : libs-mdr/lib-powm.c.i
+
+libs-mdr/lib-powm.s: libs-mdr/lib-powm.c.s
+.PHONY : libs-mdr/lib-powm.s
+
+# target to generate assembly for a file
+libs-mdr/lib-powm.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mdr.dir/build.make CMakeFiles/mdr.dir/libs-mdr/lib-powm.c.s
+.PHONY : libs-mdr/lib-powm.c.s
+
 libs-mdr/lib-timing.o: libs-mdr/lib-timing.c.o
 .PHONY : libs-mdr/lib-timing.o
 
@@ -450,6 +474,9 @@ help:
 	@echo "... libs-mdr/lib-misc.o"
 	@echo "... libs-mdr/lib-misc.i"
 	@echo "... libs-mdr/lib-misc.s"
+	@echo "... libs-mdr/lib-powm.o"
+	@echo "... libs-mdr/lib-powm.i"
+	@echo "... libs-mdr/lib-powm.s"
 	@echo "... libs-mdr/lib-timing.o"
 	@echo "... libs-mdr/lib-timing.i"
 	@echo "... libs-mdr/lib-timing.s"

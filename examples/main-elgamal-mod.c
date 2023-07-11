@@ -15,7 +15,7 @@ int main()
     gmp_randseed_os_rng(prng, 256);
 
     elgamal_mod_params_t params;
-    elgamal_mod_init(params, 80, prng);
+    elgamal_mod_init(params, 80, prng, false);
 
     elgamal_plaintext_t plaintext;
     elgamal_mod_plaintext_init_random(plaintext, prng, 32);

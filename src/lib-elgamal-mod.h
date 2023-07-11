@@ -8,6 +8,7 @@
 #include <nettle/ctr.h>
 #include <nettle/sha3.h>
 
+#include "lib-powm.h"
 #define elgamal_mr_iterations 12
 
 #define elgamal_mod_hash_size 32
@@ -67,13 +68,17 @@ struct elgamal_mod_params_struct
 
     mpz_t pk;
     mpz_t sk;
+
+    bool use_pp;
+    mpz_pp_powm_t g_pp;
+    mpz_pp_powm_t pk_pp;
 };
 
 typedef struct elgamal_mod_params_struct *elgamal_mod_params_ptr;
 typedef struct elgamal_mod_params_struct elgamal_mod_params_t[1];
 
 void elgamal_mod_init(elgamal_mod_params_t params, elgamal_mod_lambda lambda,
-                      gmp_randstate_t prng);
+                      gmp_randstate_t prng, bool use_pp);
 
 void elgamal_mod_h1(elgamal_mod_params_t params,
                     uint8_t *input, size_t input_size, mpz_t output);
