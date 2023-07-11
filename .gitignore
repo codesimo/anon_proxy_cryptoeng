@@ -3,3 +3,5 @@ bin/*
 CMakeFiles
 !build/.gitkeep
 !bin/.gitkeep
+CMakeCache.txt
+
