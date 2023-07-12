@@ -3,6 +3,7 @@
 // #include "lib-elgamal-mod.h"
 #include "lib-misc.h"
 #include "lib-mesg.h"
+#include "lib-powm.h"
 
 #include <gmp.h>
 #include <nettle/sha3.h>
@@ -49,6 +50,9 @@ struct anon_proxy_params_struct
     mpz_t p;
     mpz_t q;
     mpz_t g;
+
+    bool use_pp;
+    mpz_pp_powm_t g_pp;
 };
 
 typedef struct anon_proxy_params_struct *anon_proxy_params_ptr;
@@ -65,6 +69,10 @@ struct anon_proxy_pk_struct
 {
     mpz_t pk1;
     mpz_t pk2;
+
+    bool use_pp;
+    mpz_pp_powm_t pk1_pp;
+    mpz_pp_powm_t pk2_pp;
 };
 typedef struct anon_proxy_pk_struct *anon_proxy_pk_ptr;
 typedef struct anon_proxy_pk_struct anon_proxy_pk_t[1];
@@ -143,9 +151,9 @@ void anon_proxy_create_h3_ABCD(anon_proxy_params_t params, mpz_t A, mpz_t B, mpz
 void anon_proxy_keygen_step1(mpz_t x, anon_proxy_params_t params, gmp_randstate_t prng, mpz_t num1, mpz_t num2, size_t h4_n);
 
 void anon_proxy_init(anon_proxy_params_t params,
-                     gmp_randstate_t prng, anon_proxy_lambda lambda);
+                     gmp_randstate_t prng, anon_proxy_lambda lambda, bool use_pp);
 
-void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk);
+void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng,bool use_pp, anon_proxy_sk_t sk, anon_proxy_pk_t pk);
 
 void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk, anon_proxy_rekey_t rekey);
 

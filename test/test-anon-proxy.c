@@ -22,18 +22,24 @@ int main(int argc, char *argv[])
     anon_proxy_plaintext_t msg, msg2;
     anon_proxy_ciphertext_t enc;
     anon_proxy_reencrypted_ciphertext_t reenc;
+
     char *fixed_msg = NULL; /* default: messaggio causale */
     size_t fixed_msg_len = 0;
+    anon_proxy_lambda lambda = default_lambda;
+    long prng_seed = -1; /* -1 = seed casuale sicuro */
+
+    bool g_pp = false;
+    bool pk_pp = false;
+
     bool do_bench = false;
     bool do_original = true;
     bool do_proxy = true;
     bool is_verbose = false;
+
     stats_t timing;
     elapsed_time_t time;
     long int applied_sampling_time = 0;
-    anon_proxy_lambda lambda = default_lambda;
     int exit_status = 0;
-    long prng_seed = -1; /* -1 = seed casuale sicuro */
 
     for (int i = 1; i < argc; i++)
     {
@@ -49,17 +55,17 @@ int main(int argc, char *argv[])
             applied_sampling_time = bench_sampling_time;
             do_bench = true;
         }
-        else if (strcmp(argv[1], "all") == 0)
+        else if (strcmp(argv[i], "all") == 0)
         {
             do_original = true;
             do_proxy = true;
         }
-        else if (strcmp(argv[1], "original") == 0)
+        else if (strcmp(argv[i], "original") == 0)
         {
             do_original = true;
             do_proxy = false;
         }
-        else if (strcmp(argv[1], "proxy") == 0)
+        else if (strcmp(argv[i], "proxy") == 0)
         {
             do_proxy = true;
             do_original = false;
@@ -113,6 +119,14 @@ int main(int argc, char *argv[])
             }
             i++;
         }
+        else if (strcmp(argv[i], "g-pp") == 0)
+        {
+            g_pp = true;
+        }
+        else if (strcmp(argv[i], "pk-pp") == 0)
+        {
+            pk_pp = true;
+        }
         else
         {
             printf("utilizzo: %s [verbose|quiet] "
@@ -144,11 +158,11 @@ int main(int argc, char *argv[])
     printf("\nLambda: %d\n", lambda);
 
     printf("\nGenerazione parametri anon_proxy\n");
-    perform_oneshot_cpu_time_sampling(time, tu_sec, {
-        anon_proxy_init(params, prng, lambda);
+    perform_oneshot_cpu_time_sampling(time, tu_millis, {
+        anon_proxy_init(params, prng, lambda, g_pp);
     });
     if (do_bench)
-        printf_et(" anon_proxy_init: ", time, tu_sec, "\n");
+        printf_et(" anon_proxy_init: ", time, tu_millis, "\n");
 
     if (fixed_msg != NULL)
     {
@@ -159,6 +173,8 @@ int main(int argc, char *argv[])
             printf("\nMessaggio fissato: ");
             anon_proxy_plaintext_print(stdout, msg);
         }
+        
+        printf("\n");
     }
     else
     {
@@ -171,11 +187,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    perform_oneshot_cpu_time_sampling(time, tu_sec, {
-        anon_proxy_keygen(params, prng, sk1, pk1);
+    perform_oneshot_cpu_time_sampling(time, tu_millis, {
+        anon_proxy_keygen(params, prng, pk_pp, sk1, pk1);
     });
     if (do_bench)
-        printf_et(" anon_proxy_keygen: ", time, tu_sec, "\n");
+        printf_et(" anon_proxy_keygen: ", time, tu_millis, "\n");
 
     printf("\nCifratura...\n");
     perform_wc_time_sampling_period(
@@ -228,18 +244,18 @@ int main(int argc, char *argv[])
     if (do_proxy)
     {
         printf("\nGenerazione chiavi sk2 e pk2...\n");
-        perform_oneshot_cpu_time_sampling(time, tu_sec, {
-            anon_proxy_keygen(params, prng, sk2, pk2);
+        perform_oneshot_cpu_time_sampling(time, tu_millis, {
+            anon_proxy_keygen(params, prng, pk_pp, sk2, pk2);
         });
         if (do_bench)
-            printf_et(" anon_proxy_keygen: ", time, tu_sec, "\n");
+            printf_et(" anon_proxy_keygen: ", time, tu_millis, "\n");
 
         printf("\nGenerazione chiave di recifratura...\n");
-        perform_oneshot_cpu_time_sampling(time, tu_sec, {
+        perform_oneshot_cpu_time_sampling(time, tu_millis, {
             anon_proxy_rekeygen(params, prng, sk1, pk2, rekey);
         });
         if (do_bench)
-            printf_et(" anon_proxy_rekeygen: ", time, tu_sec, "\n");
+            printf_et(" anon_proxy_rekeygen: ", time, tu_millis, "\n");
 
         printf("\nRecifratura...\n");
         perform_wc_time_sampling_period(
@@ -293,7 +309,7 @@ int main(int argc, char *argv[])
 
     anon_proxy_pk_clear(pk1);
     anon_proxy_sk_clear(sk1);
-    
+
     anon_proxy_plaintext_clear(msg);
     anon_proxy_plaintext_clear(msg2);
     anon_proxy_ciphertext_clear(enc);

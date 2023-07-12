@@ -11,13 +11,13 @@ int main()
     gmp_randseed_os_rng(prng, 32);
 
     printf("\n--------INIT--------\n");
-    anon_proxy_init(params, prng, anon_proxy_lambda_80);
+    anon_proxy_init(params, prng, anon_proxy_lambda_80,false);
 
     printf("\n--------KEYGEN--------\n");
     anon_proxy_sk_t sk_1;
     anon_proxy_pk_t pk_1;
 
-    anon_proxy_keygen(params, prng, sk_1, pk_1);
+    anon_proxy_keygen(params, prng,false, sk_1, pk_1);
 
     printf("\n--------PLAINTEXT--------\n");
     anon_proxy_plaintext_t plaintext;
@@ -40,7 +40,7 @@ int main()
     printf("\n--------KEYGEN2-------\n");
     anon_proxy_sk_t sk_2;
     anon_proxy_pk_t pk_2;
-    anon_proxy_keygen(params, prng, sk_2, pk_2);
+    anon_proxy_keygen(params, prng,false, sk_2, pk_2);
 
     printf("\n--------REKEYGEN-------\n");
     anon_proxy_rekey_t rekey;

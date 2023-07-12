@@ -92,6 +92,11 @@ void anon_proxy_reencrypted_ciphertext_clear(anon_proxy_reencrypted_ciphertext_t
 void anon_proxy_pk_clear(anon_proxy_pk_t pk)
 {
     mpz_clears(pk->pk1, pk->pk2, NULL);
+    if (pk->use_pp)
+    {
+        mpz_pp_powm_clear(pk->pk1_pp);
+        mpz_pp_powm_clear(pk->pk2_pp);
+    }
 }
 void anon_proxy_sk_clear(anon_proxy_sk_t sk)
 {
@@ -108,6 +113,10 @@ void anon_proxy_rekey_clear(anon_proxy_rekey_t rekey)
 void anon_proxy_params_clear(anon_proxy_params_t params)
 {
     mpz_clears(params->p, params->q, params->g, NULL);
+    if (params->use_pp)
+    {
+        mpz_pp_powm_clear(params->g_pp);
+    }
 }
 void anon_proxy_plaintext_init_manual(anon_proxy_plaintext_t plaintext, uint8_t *m, size_t m_size)
 {
@@ -168,7 +177,7 @@ void anon_proxy_reencrypted_ciphertext_print(FILE *file, anon_proxy_reencrypted_
 };
 
 void anon_proxy_init(anon_proxy_params_t params,
-                     gmp_randstate_t prng, anon_proxy_lambda lambda)
+                     gmp_randstate_t prng, anon_proxy_lambda lambda, bool use_pp)
 {
     assert(params);
     assert(prng);
@@ -227,6 +236,17 @@ void anon_proxy_init(anon_proxy_params_t params,
         mpz_powm(tmp, params->g, params->q, params->p);
     } while ((mpz_cmp_ui(params->g, 1) == 0) || (mpz_cmp_ui(tmp, 1) != 0));
 
+    params->use_pp = use_pp;
+    if (use_pp)
+    {
+        pmesg(msg_verbose, "Preprocessing enabled");
+        mpz_pp_powm_init(params->g_pp, params->q_bits, params->g, params->p);
+    }
+    else
+    {
+        pmesg(msg_verbose, "Preprocessing disabled");
+    }
+
     pmesg(msg_verbose, "Inizializzazione completata");
     pmesg_mpz(msg_very_verbose, "modulo", params->p);
     pmesg_mpz(msg_very_verbose, "ordine del sottogruppo", params->q);
@@ -242,13 +262,27 @@ void anon_proxy_h4_x_num(anon_proxy_params_t params, mpz_t x, uint8_t num, mpz_t
     anon_proxy_h4(params, h4_num, sk_size + 1, output);
 }
 
-void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_proxy_sk_t sk, anon_proxy_pk_t pk)
+void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, bool use_pp, anon_proxy_sk_t sk, anon_proxy_pk_t pk)
 {
     pmesg(msg_verbose, "Generazione chiavi");
     mpz_inits(sk->sk, pk->pk1, pk->pk2, NULL);
 
+    pk->use_pp = use_pp;
+
     mpz_urandomm(sk->sk, prng, params->q);
-    mpz_powm(pk->pk1, params->g, sk->sk, params->p);
+    if (params->use_pp)
+    {
+        mpz_pp_powm(pk->pk1, sk->sk, params->g_pp);
+    }
+    else
+    {
+        mpz_powm(pk->pk1, params->g, sk->sk, params->p);
+    }
+
+    if (use_pp)
+    {
+        mpz_pp_powm_init(pk->pk1_pp, params->q_bits, pk->pk1, params->p);
+    }
 
     mpz_t h4_0_out, h4_1_out;
     mpz_inits(h4_0_out, h4_1_out, NULL);
@@ -257,7 +291,21 @@ void anon_proxy_keygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_pr
 
     mpz_mul(h4_1_out, sk->sk, h4_1_out);
     mpz_add(h4_0_out, h4_0_out, h4_1_out);
-    mpz_powm(pk->pk2, params->g, h4_0_out, params->p);
+
+    mpz_mod(h4_0_out, h4_0_out, params->q);
+
+    if (params->use_pp)
+    {
+        mpz_pp_powm(pk->pk2, h4_0_out, params->g_pp);
+    }
+    else
+    {
+        mpz_powm(pk->pk2, params->g, h4_0_out, params->p);
+    }
+    if (use_pp)
+    {
+        mpz_pp_powm_init(pk->pk2_pp, params->q_bits, pk->pk2, params->p);
+    }
 
     pmesg(msg_verbose, "Generazione chiavi completata");
     pmesg_mpz(msg_very_verbose, "chiave privata", sk->sk);
@@ -379,14 +427,21 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
     pmesg_hex(msg_very_verbose, "r||a2||b2", r_a2_b2_size, r_a2_b2);
 
     anon_proxy_h1(params, r_a2_b2, r_a2_b2_size, h1_output);
+    mpz_mod(h1_output, h1_output, params->q);
 
     //  rk2 = (g^h1, ...)
-    mpz_powm(rekey->rekey2_1, params->g, h1_output, params->p);
+    if (params->use_pp)
+        mpz_pp_powm(rekey->rekey2_1, h1_output, params->g_pp);
+    else
+        mpz_powm(rekey->rekey2_1, params->g, h1_output, params->p);
 
     // pk1^H1_output
     mpz_t h2_input;
     mpz_init(h2_input);
-    mpz_powm(h2_input, pk->pk1, h1_output, params->p);
+    if (pk->use_pp)
+        mpz_pp_powm(h2_input, h1_output, pk->pk1_pp);
+    else
+        mpz_powm(h2_input, pk->pk1, h1_output, params->p);
 
     uint8_t h2_output[anon_proxy_ske_key_size];
     memset(h2_output, 0, anon_proxy_ske_key_size);
@@ -432,9 +487,22 @@ void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_p
     pmesg_mpz(msg_very_verbose, "r_1", r_1);
 
     mpz_inits(ciphertext->A, ciphertext->B, ciphertext->C, ciphertext->S, NULL);
-    mpz_powm(ciphertext->A, params->g, r, params->p);
-    mpz_powm(ciphertext->B, pk->pk1, r, params->p);
-    mpz_powm(ciphertext->C, params->g, r_1, params->p);
+
+    if (params->use_pp)
+    {
+        mpz_pp_powm(ciphertext->A, r, params->g_pp);
+        mpz_pp_powm(ciphertext->C, r_1, params->g_pp);
+    }
+    else
+    {
+        mpz_powm(ciphertext->A, params->g, r, params->p);
+        mpz_powm(ciphertext->C, params->g, r_1, params->p);
+    }
+
+    if (pk->use_pp)
+        mpz_pp_powm(ciphertext->B, r, pk->pk1_pp);
+    else
+        mpz_powm(ciphertext->B, pk->pk1, r, params->p);
 
     pmesg_mpz(msg_very_verbose, "A", ciphertext->A);
     pmesg_mpz(msg_very_verbose, "B", ciphertext->B);
@@ -442,7 +510,10 @@ void anon_proxy_encrypt(anon_proxy_params_t params, gmp_randstate_t prng, anon_p
 
     mpz_t h2_input;
     mpz_init(h2_input);
-    mpz_powm(h2_input, pk->pk2, r, params->p);
+    if (pk->use_pp)
+        mpz_pp_powm(h2_input, r, pk->pk2_pp);
+    else
+        mpz_powm(h2_input, pk->pk2, r, params->p);
 
     uint8_t h2_output[anon_proxy_ske_key_size];
 
@@ -489,7 +560,10 @@ void anon_proxy_decrypt_original(anon_proxy_params_t params, anon_proxy_sk_t sk,
 
     mpz_t left_check;
     mpz_init(left_check);
-    mpz_powm(left_check, params->g, ciphertext->S, params->p);
+    if (params->use_pp)
+        mpz_pp_powm(left_check, ciphertext->S, params->g_pp);
+    else
+        mpz_powm(left_check, params->g, ciphertext->S, params->p);
 
     mpz_t right_check;
     mpz_init(right_check);
@@ -552,7 +626,10 @@ void anon_proxy_reencrypt(anon_proxy_params_t params, anon_proxy_rekey_t rekey, 
 
     mpz_t left_check;
     mpz_init(left_check);
-    mpz_powm(left_check, params->g, ciphertext->S, params->p);
+    if (params->use_pp)
+        mpz_pp_powm(left_check, ciphertext->S, params->g_pp);
+    else
+        mpz_powm(left_check, params->g, ciphertext->S, params->p);
 
     assert(mpz_cmp(right_check, left_check) == 0);
 
@@ -609,16 +686,20 @@ void anon_proxy_decrypt_reencrypted(anon_proxy_params_t params, anon_proxy_sk_t 
                                  r_a2_b2,
                                  reencrypted_ciphertext->U2);
 
-    mpz_t left_check;
-    mpz_init(left_check);
+    mpz_t left_check, left_check_2;
+    mpz_inits(left_check, left_check_2, NULL);
 
     anon_proxy_h1(params, r_a2_b2, reencrypted_ciphertext->U2_size, left_check);
+    mpz_mod(left_check, left_check, params->q);
 
-    mpz_powm(left_check, params->g, left_check, params->p);
+    if (params->use_pp)
+        mpz_pp_powm(left_check_2, left_check, params->g_pp);
+    else
+        mpz_powm(left_check_2, params->g, left_check, params->p);
 
-    assert(mpz_cmp(left_check, reencrypted_ciphertext->U1) == 0);
+    assert(mpz_cmp(left_check_2, reencrypted_ciphertext->U1) == 0);
 
-    mpz_clear(left_check);
+    mpz_clears(left_check, left_check_2, NULL);
 
     pmesg_hex(msg_very_verbose, "r_a2_b2", reencrypted_ciphertext->U2_size, r_a2_b2);
 
