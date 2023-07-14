@@ -16,7 +16,7 @@ void anon_proxy_h1(anon_proxy_params_t params,
     anon_proxy_hash_ctx_digest(&ctx, anon_proxy_hash_size, digest);
 
     mpz_import(output, anon_proxy_hash_size, 1, 1, 0, 0, digest);
-    mpz_mod(output, output, params->p);
+    mpz_mod(output, output, params->q);
 
     if (mpz_cmp_ui(output, 0) == 0)
         mpz_set_ui(output, 1);
@@ -37,7 +37,7 @@ void anon_proxy_h2(anon_proxy_params_t params, mpz_t input, uint8_t *output)
 
 void anon_proxy_h3(anon_proxy_params_t params, mpz_t input, mpz_t output)
 {
-    mpz_mod(output, input, params->p);
+    mpz_mod(output, input, params->q);
     if (mpz_cmp_ui(output, 0) == 0)
         mpz_set_ui(output, 1);
 }
@@ -56,7 +56,7 @@ void anon_proxy_h4(anon_proxy_params_t params,
     anon_proxy_hash_ctx_digest(&ctx, anon_proxy_hash_size, digest);
 
     mpz_import(output, anon_proxy_hash_size, 1, 1, 0, 0, digest);
-    mpz_mod(output, output, params->p);
+    mpz_mod(output, output, params->q);
 
     if (mpz_cmp_ui(output, 0) == 0)
         mpz_set_ui(output, 1);
@@ -427,7 +427,6 @@ void anon_proxy_rekeygen(anon_proxy_params_t params, gmp_randstate_t prng, anon_
     pmesg_hex(msg_very_verbose, "r||a2||b2", r_a2_b2_size, r_a2_b2);
 
     anon_proxy_h1(params, r_a2_b2, r_a2_b2_size, h1_output);
-    mpz_mod(h1_output, h1_output, params->q);
 
     //  rk2 = (g^h1, ...)
     if (params->use_pp)
@@ -690,7 +689,6 @@ void anon_proxy_decrypt_reencrypted(anon_proxy_params_t params, anon_proxy_sk_t 
     mpz_inits(left_check, left_check_2, NULL);
 
     anon_proxy_h1(params, r_a2_b2, reencrypted_ciphertext->U2_size, left_check);
-    mpz_mod(left_check, left_check, params->q);
 
     if (params->use_pp)
         mpz_pp_powm(left_check_2, left_check, params->g_pp);
