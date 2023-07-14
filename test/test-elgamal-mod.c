@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
         else
         {
             printf("utilizzo: %s [verbose|quiet] "
-                   "[lambda 80|112|128] [seed <n>] [message <n>] [bench] [use-pp]\n",
+                   "[lambda 80|112|128] [seed <n>] [message <n>] [use-pp] [bench]\n",
                    argv[0]);
             exit(1);
         }

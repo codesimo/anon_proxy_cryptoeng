@@ -50,12 +50,12 @@ Testing and benchmarking is avaiable with `test-elgamal-mod` and `test-anon-prox
 
 Usage of `test-elgamal-mod`:
 ```
-./test-elgamal-mod [verbose|quiet] [lambda 80|112|128] [seed <n>] [message <n>] [bench]
+./test-elgamal-mod [verbose|quiet] [lambda 80|112|128] [seed <n>] [message <n>] [use-pp] [bench]
 ```
 
 Usage of `test-anon-proxy`:
 ```
-./test-anon-proxy [verbose|quiet] [all|original|proxy] [lambda 80|112|128] [seed <n>] [message <n>] [bench]
+./test-anon-proxy [verbose|quiet] [all|original|proxy] [lambda 80|112|128] [seed <n>] [message <n>] [g-pp] [pk-pp] [bench]
 ```
 
 ## References
