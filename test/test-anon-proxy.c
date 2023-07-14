@@ -112,11 +112,7 @@ int main(int argc, char *argv[])
             assert(argv[i + 1]);
             fixed_msg = argv[i + 1];
             fixed_msg_len = strlen(fixed_msg);
-            if (fixed_msg_len % 16 != 0)
-            {
-                printf("lunghezza del messaggio non valida. Il messaggio deve essere %%16\n");
-                exit(1);
-            }
+
             i++;
         }
         else if (strcmp(argv[i], "g-pp") == 0)
@@ -156,6 +152,9 @@ int main(int argc, char *argv[])
     }
 
     printf("\nLambda: %d\n", lambda);
+
+    printf("Utilizzo pre-processing  g: %s\n", g_pp ? "true" : "false");
+    printf("Utilizzo pre-processing pk: %s\n", pk_pp ? "true" : "false");
 
     printf("\nGenerazione parametri anon_proxy\n");
     perform_oneshot_cpu_time_sampling(time, tu_millis, {

@@ -129,6 +129,7 @@ int main(int argc, char *argv[])
     }
 
     printf("\nLambda: %d\n", lambda);
+    printf("Uso pre-processing: %s\n", use_pp ? "true" : "false");
 
     printf("\nGenerazione parametri Elgamal-mod\n");
     perform_oneshot_cpu_time_sampling(time, tu_sec, {
