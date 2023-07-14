@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
         {
             printf("utilizzo: %s [verbose|quiet] "
                    "[all|original|proxy] "
-                   "[lambda 80|112|128] [seed <n>] [message <n>] [bench]\n",
+                   "[lambda 80|112|128] [seed <n>] [message <n>] [g-pp] [pk-pp] [bench]\n",
                    argv[0]);
             exit(1);
         }
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
             printf("\nMessaggio fissato: ");
             anon_proxy_plaintext_print(stdout, msg);
         }
-        
+
         printf("\n");
     }
     else
