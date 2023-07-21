@@ -49,12 +49,15 @@ set_target_properties(
 )
 
 
-target_link_libraries(main-elgamal-mod mdr elgamal-mod m gmp nettle)
-target_link_libraries(main-elgamal-mod mdr elgamal-mod m gmp nettle)
+target_link_libraries(main-elgamal-mod m gmp nettle mdr elgamal-mod)
+target_link_libraries(main-elgamal-mod m gmp nettle mdr elgamal-mod)
 
-target_link_libraries(test-elgamal-mod mdr elgamal-mod m gmp nettle)
-target_link_libraries(test-elgamal-mod mdr elgamal-mod m gmp nettle)
+target_link_libraries(test-elgamal-mod m gmp nettle mdr elgamal-mod)
+target_link_libraries(test-elgamal-mod m gmp nettle mdr elgamal-mod)
 
 
-target_link_libraries(main-anon-proxy mdr anon-proxy m gmp nettle)
-target_link_libraries(test-anon-proxy mdr anon-proxy m gmp nettle)
+target_link_libraries(main-anon-proxy m gmp nettle mdr anon-proxy)
+target_link_libraries(main-anon-proxy m gmp nettle mdr anon-proxy)
+
+target_link_libraries(test-anon-proxy m gmp nettle mdr anon-proxy)
+target_link_libraries(test-anon-proxy m gmp nettle mdr anon-proxy)
