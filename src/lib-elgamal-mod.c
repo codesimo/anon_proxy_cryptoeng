@@ -339,17 +339,20 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
     elgamal_mod_h1(params, dec_output, ciphertext->c2_size, h1_res);
     pmesg_mpz(msg_very_verbose, "H1(r'||m')", h1_res);
 
+    mpz_t h1_res2;
+    mpz_init(h1_res2);
     if (params->use_pp)
     {
-        mpz_pp_powm(h1_res, h1_res, params->g_pp);
+
+        mpz_pp_powm(h1_res2, h1_res, params->g_pp);
     }
     else
     {
-        mpz_powm(h1_res, params->g, h1_res, params->p);
+        mpz_powm(h1_res2, params->g, h1_res, params->p);
     }
 
     // C1 =?= g^H1(r'||m')
-    assert(mpz_cmp(h1_res, ciphertext->c1) == 0);
+    assert(mpz_cmp(h1_res2, ciphertext->c1) == 0);
 
     // m = m', r = r'
     plaintext->m_size = ciphertext->c2_size - params->q_bits / 8;
@@ -359,5 +362,5 @@ void elgamal_mod_decrypt(elgamal_mod_params_t params, elgamal_ciphertext_t ciphe
     pmesg_hex(msg_very_verbose, "r'", params->q_bits / 8, r_1);
     pmesg_hex(msg_very_verbose, "m'", plaintext->m_size, plaintext->m);
 
-    mpz_clears(h2_input, h1_res, NULL);
+    mpz_clears(h2_input, h1_res2, NULL);
 }
